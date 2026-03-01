@@ -28,7 +28,7 @@ DevFolio generates developer portfolios and team velocity dashboards from:
 ## Installation
 
 ```bash
-go install github.com/fleet-ops/devfolio/cmd/devfolio@latest
+go install github.com/plexusone/devfolio/cmd/devfolio@latest
 ```
 
 ## Quick Start
@@ -37,7 +37,7 @@ go install github.com/fleet-ops/devfolio/cmd/devfolio@latest
 
 ```bash
 # 1. Create a portfolio from changelogs (using structured-changelog)
-schangelog portfolio discover --org fleet-ops -o manifest.json
+schangelog portfolio discover --org plexusone -o manifest.json
 schangelog portfolio aggregate manifest.json -o portfolio.json
 
 # 2. Generate team velocity dashboard
@@ -158,6 +158,50 @@ This data can be used to:
 
 - Go 1.25+
 - `GITHUB_TOKEN` environment variable for GitHub API access
+
+## Authentication
+
+DevFolio requires a GitHub personal access token set as `GITHUB_TOKEN`:
+
+```bash
+export GITHUB_TOKEN=your_token_here
+```
+
+### Fine-Grained Token (Recommended)
+
+Create at: https://github.com/settings/personal-access-tokens/new
+
+**Repository access:**
+- Select "Public repositories (read-only)" for public repos
+- Or select specific repos if you need private repo data
+
+**Repository permissions:**
+
+| Permission | Access | Purpose |
+|------------|--------|---------|
+| Contents | Read-only | Read commit data |
+| Pull requests | Read-only | Count PRs |
+| Issues | Read-only | Count issues |
+| Metadata | Read-only | Repository info (auto-included) |
+
+**Account permissions:**
+
+| Permission | Access | Purpose |
+|------------|--------|---------|
+| Profile | Read-only | User info (name, bio, etc.) |
+
+### Classic Token
+
+Create at: https://github.com/settings/tokens/new
+
+**Required scopes:**
+
+| Scope | Purpose |
+|-------|---------|
+| `public_repo` | Access public repository data |
+| `read:user` | Read user profile information |
+
+Add `repo` scope instead of `public_repo` if you need access to private repositories.
 
 ## Related Projects
 
