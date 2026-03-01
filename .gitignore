@@ -15,6 +15,7 @@
 # Output files
 *.json
 !*_test.json
+!CHANGELOG.json
 
 # IDE
 .idea/
