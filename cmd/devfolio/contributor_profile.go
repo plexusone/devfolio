@@ -5,19 +5,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/grokify/mogo/fmt/progress"
 	"github.com/spf13/cobra"
 
 	"github.com/plexusone/devfolio/contributor"
 )
 
 var (
-	contribProfileUser   string
-	contribProfileOutput string
-	contribProfileSince  string
-	contribProfileUntil  string
-	contribProfileOrgs   []string
+	contribProfileUser      string
+	contribProfileOutput    string
+	contribProfileSince     string
+	contribProfileUntil     string
+	contribProfileOrgs      []string
+	contribProfileAPIOnly   bool
+	contribProfileLocalPath string
 )
 
 var contributorProfileCmd = &cobra.Command{
@@ -52,6 +56,8 @@ func init() {
 	contributorProfileCmd.Flags().StringVar(&contribProfileSince, "since", "", "Start date (YYYY-MM-DD)")
 	contributorProfileCmd.Flags().StringVar(&contribProfileUntil, "until", "", "End date (YYYY-MM-DD)")
 	contributorProfileCmd.Flags().StringArrayVar(&contribProfileOrgs, "org", nil, "Filter to specific organizations")
+	contributorProfileCmd.Flags().BoolVar(&contribProfileAPIOnly, "api-only", false, "Force API-only mode, skip local repo detection")
+	contributorProfileCmd.Flags().StringVar(&contribProfileLocalPath, "local-path", "", "Additional local path to search for repos")
 	_ = contributorProfileCmd.MarkFlagRequired("user")
 	contributorCmd.AddCommand(contributorProfileCmd)
 }
@@ -64,10 +70,36 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("GITHUB_TOKEN environment variable is required")
 	}
 
+	// Set up progress renderer
+	renderer := progress.NewMultiStageRenderer(os.Stderr)
+
+	// Build local paths list
+	var localPaths []string
+	home, _ := os.UserHomeDir()
+	if home != "" {
+		// Default search paths
+		localPaths = append(localPaths, filepath.Join(home, "go", "src", "github.com"))
+	}
+	if contribProfileLocalPath != "" {
+		localPaths = append(localPaths, contribProfileLocalPath)
+	}
+
 	// Build profile options
 	opts := contributor.ProfileOptions{
-		Username: contribProfileUser,
-		Orgs:     contribProfileOrgs,
+		Username:   contribProfileUser,
+		Orgs:       contribProfileOrgs,
+		APIOnly:    contribProfileAPIOnly,
+		LocalPaths: localPaths,
+		Progress: func(stage, totalStages, current, total int, description string, done bool) {
+			renderer.Update(progress.StageInfo{
+				Stage:       stage,
+				TotalStages: totalStages,
+				Current:     current,
+				Total:       total,
+				Description: description,
+				Done:        done,
+			})
+		},
 	}
 
 	if contribProfileSince != "" {
@@ -118,6 +150,9 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(os.Stderr, "  Repositories: %d\n", len(profile.Repositories))
 	fmt.Fprintf(os.Stderr, "  Commits:      %d\n", profile.Stats.TotalCommits)
 	fmt.Fprintf(os.Stderr, "  PRs:          %d\n", profile.Stats.TotalPRs)
+	if profile.AIStats.TotalAICommits > 0 {
+		fmt.Fprintf(os.Stderr, "  AI Commits:   %d (%.1f%%)\n", profile.AIStats.TotalAICommits, profile.AIStats.AICommitPercent)
+	}
 
 	return nil
 }

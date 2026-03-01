@@ -63,12 +63,21 @@ type DateRange struct {
 	End   string `json:"end"`   // YYYY-MM-DD
 }
 
+// ProgressFunc is called to report progress during profile generation.
+// stage is 1-based, totalStages is the total number of stages.
+// current/total are for progress within the current stage (0 if not applicable).
+// description describes what's happening.
+type ProgressFunc func(stage, totalStages int, current, total int, description string, done bool)
+
 // ProfileOptions configures profile generation.
 type ProfileOptions struct {
-	Username string
-	Orgs     []string  // Filter to specific organizations
-	Since    time.Time // Start date
-	Until    time.Time // End date
+	Username   string
+	Orgs       []string     // Filter to specific organizations
+	Since      time.Time    // Start date
+	Until      time.Time    // End date
+	LocalPaths []string     // Local paths to search for repos (e.g., ~/go/src)
+	APIOnly    bool         // Force API-only mode, skip local repo detection
+	Progress   ProgressFunc // Progress callback (optional)
 }
 
 // ContributionEvent represents a single contribution event.
