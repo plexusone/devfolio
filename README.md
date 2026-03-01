@@ -14,16 +14,16 @@ Developer portfolio and team velocity metrics generator.
 
 DevFolio generates developer portfolios and team velocity dashboards from:
 
-- Changelog data (via [structured-changelog](https://github.com/grokify/structured-changelog))
-- Git history
-- GitHub activity (commits, PRs, issues, reviews)
+- 📋 Changelog data (via [structured-changelog](https://github.com/grokify/structured-changelog))
+- 📜 Git history
+- 🐙 GitHub activity (commits, PRs, issues, reviews)
 
 ## Use Cases
 
-- **Team velocity dashboards** - Engineering managers track team output
-- **Individual contributor portfolios** - Track your own contributions over time
-- **Recruiting (hiring)** - Evaluate candidate contribution patterns
-- **Recruiting (job seeking)** - Showcase your development portfolio
+- 📊 **Team velocity dashboards** - Engineering managers track team output
+- 👤 **Individual contributor portfolios** - Track your own contributions over time
+- 🔍 **Recruiting (hiring)** - Evaluate candidate contribution patterns
+- 💼 **Recruiting (job seeking)** - Showcase your development portfolio
 
 ## Installation
 
