@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/plexusone/devfolio/contributor"
+	"github.com/plexusone/devfolio/output/dashboard"
 )
 
 var (
@@ -22,6 +23,7 @@ var (
 	contribProfileOrgs      []string
 	contribProfileAPIOnly   bool
 	contribProfileLocalPath string
+	contribProfileDashboard bool
 )
 
 var contributorProfileCmd = &cobra.Command{
@@ -42,6 +44,9 @@ Examples:
   # Generate profile for a user
   devfolio contributor profile --user grokify -o profile.json
 
+  # Generate dashforge-compatible dashboard
+  devfolio contributor profile --user grokify --dashboard -o dashboard.json
+
   # Limit to specific organizations
   devfolio contributor profile --user grokify --org fleet-ops --org agentplexus
 
@@ -58,6 +63,7 @@ func init() {
 	contributorProfileCmd.Flags().StringArrayVar(&contribProfileOrgs, "org", nil, "Filter to specific organizations")
 	contributorProfileCmd.Flags().BoolVar(&contribProfileAPIOnly, "api-only", false, "Force API-only mode, skip local repo detection")
 	contributorProfileCmd.Flags().StringVar(&contribProfileLocalPath, "local-path", "", "Additional local path to search for repos")
+	contributorProfileCmd.Flags().BoolVar(&contribProfileDashboard, "dashboard", false, "Output dashforge-compatible dashboard JSON")
 	_ = contributorProfileCmd.MarkFlagRequired("user")
 	contributorCmd.AddCommand(contributorProfileCmd)
 }
@@ -130,9 +136,24 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 	}
 
 	// Output
-	output, err := json.MarshalIndent(profile, "", "  ")
-	if err != nil {
-		return fmt.Errorf("marshaling profile: %w", err)
+	var output []byte
+	if contribProfileDashboard {
+		// Export as dashforge dashboard
+		dash, err := dashboard.ExportContributorDashboard(profile)
+		if err != nil {
+			return fmt.Errorf("exporting dashboard: %w", err)
+		}
+		output, err = json.MarshalIndent(dash, "", "  ")
+		if err != nil {
+			return fmt.Errorf("marshaling dashboard: %w", err)
+		}
+	} else {
+		// Export as raw profile
+		var err error
+		output, err = json.MarshalIndent(profile, "", "  ")
+		if err != nil {
+			return fmt.Errorf("marshaling profile: %w", err)
+		}
 	}
 
 	if contribProfileOutput == "" {
@@ -141,7 +162,11 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 		if err := os.WriteFile(contribProfileOutput, output, 0600); err != nil {
 			return fmt.Errorf("writing output: %w", err)
 		}
-		fmt.Fprintf(os.Stderr, "Wrote contributor profile to %s\n", contribProfileOutput)
+		outputType := "profile"
+		if contribProfileDashboard {
+			outputType = "dashboard"
+		}
+		fmt.Fprintf(os.Stderr, "Wrote contributor %s to %s\n", outputType, contribProfileOutput)
 	}
 
 	// Print summary
