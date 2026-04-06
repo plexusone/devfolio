@@ -12,8 +12,8 @@ github.com/grokify/gogithub v0.12.1 h1:sCSq/1uX4j0REliYPVOdwsb/tfLs72JOEyn/uP2Se
 github.com/grokify/gogithub v0.12.1/go.mod h1:jM23QcxP8IcBSC4oOgcchp+1ckPcZKYlaohnOsJ6Ewg=
 github.com/grokify/mogo v0.74.1 h1:oODNqQFBWD4lNEdr5gq0eDMVUUyP26bOEboK9UZycnw=
 github.com/grokify/mogo v0.74.1/go.mod h1:RC7/sy7MsyZSwJesNohN2EkGvgSFeSLvzOw4c/dGdSo=
-github.com/grokify/structured-changelog v0.12.0 h1:vWAWDW8lPYxbgSFFAlO/SPouJDUyKIg/3f5po217u3g=
-github.com/grokify/structured-changelog v0.12.0/go.mod h1:l4Wgkg1mvUjfKigiiMalH1FTuIDOgMPSb3vjAu1gPpY=
+github.com/grokify/structured-changelog v0.13.0 h1:Yy/QqpxS0ARQmuRyAuHU2FrcWLOe+wf31Jva5Jows0o=
+github.com/grokify/structured-changelog v0.13.0/go.mod h1:l4Wgkg1mvUjfKigiiMalH1FTuIDOgMPSb3vjAu1gPpY=
 github.com/huandu/xstrings v1.5.0 h1:2ag3IFq9ZDANvthTwTiqSSZLjDc+BedvHPAp5tJy2TI=
 github.com/huandu/xstrings v1.5.0/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
