@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v88/github"
 	"github.com/grokify/gogithub/auth"
 )
 
@@ -30,7 +30,10 @@ func NewClient(token string) (*Client, error) {
 		return nil, fmt.Errorf("GitHub token is required")
 	}
 
-	client := auth.NewGitHubClient(context.Background(), token)
+	client, err := auth.NewGitHubClient(context.Background(), token)
+	if err != nil {
+		return nil, fmt.Errorf("creating GitHub client: %w", err)
+	}
 	return &Client{gh: client}, nil
 }
 
