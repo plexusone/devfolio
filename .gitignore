@@ -33,3 +33,6 @@ coverage.html
 
 # Environment
 .envrc
+
+# Ideation scratch notes
+IDEATION_CHAT*.md
