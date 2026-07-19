@@ -91,6 +91,7 @@
 
 - [ ] Disclosure engine: canonical private IR → profile-driven projections (`public-minimal|public-portfolio|public-transparent|private-share|private-full`); leak tests for private repo identities.
 - [ ] `devfolio publish` / `site build` / `site deploy --provider github-pages` targeting `{username}/devfolio`; profile-README managed markers; Go templates + embedded assets.
+- [ ] Dashboard-IR export (2026-07-19 architecture decision, TRD §7): project SPACE/AI-SPACE/DORA/AI-DORA period reports into two artifacts — a disclosure-safe data JSON and a `plexusone/dashforge` `dashboardir.Dashboard` definition. `ProductBuildersHQ/productbuildershq-frameworks` used only here (metric ID → level-threshold lookup for widget config), never inside the `omnidevx-core` compute engine. Consumed by dashforge's static viewer and, downstream, by `ProductBuildersHQ/visionstudio`'s daemon — projection-only, never canonical private IR, preserving the org boundary.
 - [ ] Monthly capability report generation (canonical cadence), quarterly/annual synthesis from monthlies.
 - [ ] Later: ecosystem/capability graph rollups (repository → capability → application → ecosystem) and multi-audience projections.
 

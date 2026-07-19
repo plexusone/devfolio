@@ -72,7 +72,7 @@ story: type re-exports, provider constructor re-exports, and an `Engine`
 ### plexusone/devfolio
 
 - **v0.2.0 — AI SPACE profiles (Plan Phase 6).** Depend on `omnidevx`; `collect`/`aggregate`/`space report` commands; `Profile.AISpace` summary with `reportRef`s; AI stats move from `contributor/client.go` into collectors; empty `datasource/` stubs removed. Reorders the root PRD's "Phase 2: team velocity" — individual velocity ships first because team velocity will be derived from it (see v0.4.0).
-- **v0.3.0 — Publication (Plan Phase 8).** Disclosure profiles + projections, `publish`/`site build`/`site deploy`, `{username}/devfolio` Pages, profile-README managed markers, monthly report cadence. Dogfooding target: an AI SPACE scorecard on plexusone.dev fed the way releaselog feeds `/releases/` today.
+- **v0.3.0 — Publication (Plan Phase 8).** Disclosure profiles + projections, `publish`/`site build`/`site deploy`, `{username}/devfolio` Pages, profile-README managed markers, monthly report cadence. Dashboard-IR export (TRD §7) feeds `dashforge`'s viewer and, downstream, `ProductBuildersHQ/visionstudio`'s dashboard panel. Dogfooding target: an AI SPACE scorecard on plexusone.dev fed the way releaselog feeds `/releases/` today.
 - **v0.4.0 — Team unification (Plan Phase 9).** Team velocity rebased onto rollups of individual `DeveloperPeriodReport`s — the unification of the solo-first strategy; existing changelog-based `team velocity` command is superseded. Team privacy/aggregation rules.
 - **v0.5.0+ — Cadence + ecosystem.** Quarterly/annual synthesis, capability/ecosystem graph rollups, multi-audience report projections, organization-level rollups.
 

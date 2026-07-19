@@ -223,11 +223,32 @@ Constraints:
 - Disclosure model: canonical private IR (`devfolio/v1`) with derived projections (`devfolio.public-profile/v1`) — metric scope (which repos contribute) is independent of repository disclosure (which identities appear). Five publication profiles; `public-portfolio` default. Projections are derived, never destructive edits of the canonical store.
 - Publishing: `{username}/devfolio` repo → GitHub Pages; profile-README sections via `<!-- DEVFOLIO:START/END -->` managed markers; Go templates + embedded assets; `--push` always explicit.
 
-## 7. Schema Workflow
+## 7. Dashboard Projection and Visualization
+
+Visualization is a **projection consumer**, not a new collection or analytics layer — it reads already-computed period reports and never touches provider APIs or raw events.
+
+### Two-artifact export
+
+Every visualized report exports as two separate JSON artifacts, not one:
+
+1. **Data** — the disclosure-safe projection of a `DeveloperPeriodReport`/`SPACEReport`/`DORAReport` (redacted per the active publication profile from §6). Generated per period by DevFolio.
+2. **Dashboard definition** — a [dashforge](https://github.com/plexusone/dashforge) `dashboardir.Dashboard` JSON (`Layout`, `DataSources[]` pointing at the data artifact by URL, `Widgets[]`: `metric` widgets for SPACE's five dimensions + AI extension fields, `metric`/`chart` widgets for DORA's four keys, `table` for the `bySource` breakdown). Mostly static — built once per report type, not regenerated per period.
+
+Dashforge is chosen over a Grafana/OTel stack (evaluated 2026-07-19) because it is JSON-IR-first (matches the ecosystem's Go-first schema convention), starts static-file-only with zero infrastructure, and already has a working precedent for this exact pattern (`pipelineconductor check -o data.json` → `viewer/?dashboard=...`). This keeps visualization inside the existing "CLI + JSON artifacts + static sites" scope (PRD §Out of Scope) rather than introducing a hosted/real-time service.
+
+### Metric scoring and thresholds
+
+[`ProductBuildersHQ/productbuildershq-frameworks`](https://github.com/ProductBuildersHQ/productbuildershq-frameworks) is a **taxonomy/threshold catalog** (`AISpaceFramework`, `AIDoraFramework`: dimension → metric ID → `MetricLevels{Elite,High,Medium,Low}`), not a report schema — it carries no subject, period, or computed value. It is used **only at the projection step**, to look up a computed metric's level/tier and label for display (feeding dashforge's `MetricConfig.Thresholds`/`Icon`), never inside `omnidevx-core`'s `space`/`dora` compute engines. Two reasons: `omnidevx-core` is committed to staying dependency-light (§1 Dependency rules), and this avoids a hard cross-org dependency (`plexusone` → `ProductBuildersHQ`) inside the compute path — if published thresholds change, only presentation shifts, not stored metric values. `omnidevx`'s emitted metric IDs should align with `frameworks.SpaceMetric.ID`/`DoraMetric.ID` where the two vocabularies overlap, so the lookup is a direct key match rather than a translation table.
+
+### Visionstudio consumption boundary
+
+[`ProductBuildersHQ/visionstudio`](https://github.com/ProductBuildersHQ/visionstudio) consumes the exported **projection only** (data + dashboard-definition JSON), never the canonical private IR or raw period reports. This mirrors the disclosure model in §6: visionstudio is a separate product/org (ProductBuildersHQ, not PlexusOne), so the org boundary gets the same treatment as any other public consumer. Integration is read-only file/URL consumption by visionstudio's Go daemon (rendered via dashforge's static viewer or natively alongside its existing `maturity-model/` dashboard component) — no shared database, no live query path into DevFolio's local store.
+
+## 8. Schema Workflow
 
 Per global Go-first convention: Go structs are the source of truth; JSON Schemas are generated (`invopop/jsonschema`), linted with `schemago lint`, embedded via `//go:embed`, and committed alongside the types. Applies to `omnidevx.event/v1`, `omnidevx.developer-period/v1`, SPACE/DORA report schemas, and DevFolio projection schemas.
 
-## 8. Non-Requirements
+## 9. Non-Requirements
 
 - No universal shell wrapper/proxy around coding agents.
 - No nested Go modules within a repo without demonstrated need.
