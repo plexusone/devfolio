@@ -2,6 +2,8 @@
 
 Prioritized implementation tasks organized by phase.
 
+> **Scope note:** Phases below reflect the original app-scoped plan. Sequencing has been superseded by the OmniDevX ecosystem specs in [docs/specs/](docs/specs/PLAN.md) — notably, individual AI SPACE metrics (devfolio v0.2.0) now precede team velocity, which will be derived from them (docs/specs/PLAN.md Phase 9).
+
 ## Phase 1: Individual Contributor Profiles (v0.1.0) ✅
 
 ### Completed

@@ -1,5 +1,7 @@
 # Product Requirements Document: DevFolio
 
+> **Scope note:** This PRD covers the DevFolio application. The ecosystem-wide specs for the OmniDevX / AI SPACE metrics architecture (spanning `omnidevx-core`, `omnidevx`, `omni-github`, and DevFolio) live in [docs/specs/](docs/specs/PRD.md).
+
 ## Overview
 
 DevFolio is a CLI tool for generating developer portfolios and team velocity metrics from multiple data sources including GitHub activity, git history, and structured changelogs.
