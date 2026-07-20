@@ -36,3 +36,6 @@ coverage.html
 
 # Ideation scratch notes
 IDEATION_CHAT*.md
+
+# MkDocs build output
+site/
