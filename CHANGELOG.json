@@ -7,6 +7,37 @@
   "maintainers": ["plexusone"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-07-20",
+      "highlights": [
+        { "description": "`devfolio devx dashboard`: build a DeveloperPeriodReport from the local OmniDevX event store (Claude Code, Codex CLI, git, GitHub) and export it as a dashforge dashboard", "commit": "13ec741" },
+        { "description": "MkDocs documentation site, matching the rest of the OmniDevX ecosystem", "commit": "a6102a8" },
+        { "description": "Contributor profile: local git clone detection with automatic API fallback, multi-stage progress reporting, and a dashforge dashboard export flag", "commit": "78961b7" }
+      ],
+      "added": [
+        { "description": "`devfolio devx dashboard` command: reads the local OmniDevX store, builds a `DeveloperPeriodReport`, exports a portable dashforge dashboard (8 metric tiles, daily activity/cost charts, source-coverage table)", "commit": "13ec741" },
+        { "description": "`output/devxdashboard` package: projects a `DeveloperPeriodReport` into `dashforge`'s `dashboardir.Dashboard` type directly (not a local reimplementation), so chart widgets render correctly in dashforge's current viewer", "commit": "7aae21c" },
+        { "description": "`contributor profile --dashboard`: export a dashforge-compatible dashboard from a contributor profile (chart widgets use an older shape — see Documentation)", "commit": "5b59e38" },
+        { "description": "`contributor profile --api-only`/`--local-path`: local git clone detection (checks `~/go/src/github.com` and configured paths, falls back to the GitHub API) plus multi-stage progress reporting to stderr", "commit": "78961b7" },
+        { "description": "MkDocs site: landing page, getting-started walkthrough, command reference for contributor/team/devx, PlexusOne nav override — `docs/specs/` (internal ecosystem architecture) deliberately excluded from the built site", "commit": "a6102a8" }
+      ],
+      "changed": [
+        { "description": "README: add the missing docs-mkdoc badge, document `devx dashboard`, fix stale links (dashforge pointed at the wrong org twice, license badge pointed at a nonexistent master branch, visualization badge pointed at an unrelated repo) and a stale Go-version/GITHUB_TOKEN requirements claim", "commit": "f300094" }
+      ],
+      "dependencies": [
+        { "description": "Add `github.com/plexusone/dashforge` v0.3.0 for the dashboardir types", "commit": "5738257" },
+        { "description": "Add `github.com/plexusone/omnidevx-core` v0.2.0 for the report/identity/store packages", "commit": "e5e8dd1" },
+        { "description": "Bump `github.com/google/go-github` to v88.0.0, `github.com/grokify/gogithub` to v0.13.0, `github.com/grokify/mogo` to v0.74.6, `github.com/grokify/structured-changelog` to v0.14.1 (routine dependabot updates)", "commit": "23916a2" }
+      ],
+      "documentation": [
+        { "description": "OmniDevX ecosystem spec set (PRD/TRD/PLAN/ROADMAP) distilled from ideation notes into `docs/specs/`, covering the canonical event IR through team unification", "commit": "dda5580" },
+        { "description": "TRD §7: dashboard-projection architecture — the two-artifact export (disclosure-safe data + dashforge dashboard definition), why dashforge over a Grafana/OTel stack, and the VisionStudio consumption boundary", "commit": "40e1b46" }
+      ],
+      "infrastructure": [
+        { "description": "Gitignore `.envrc` and `IDEATION_CHAT*.md` scratch notes", "commit": "55f4f3a" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-02-28",
       "highlights": [
