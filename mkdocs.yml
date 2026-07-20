@@ -1,0 +1,66 @@
+site_name: DevFolio
+site_description: Developer portfolio and team velocity metrics generator
+site_url: https://plexusone.github.io/devfolio
+repo_name: plexusone/devfolio
+repo_url: https://github.com/plexusone/devfolio
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    # Dark mode first (PlexusOne default)
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+extra_css:
+  - https://plexusone.dev/css/plexusone-mkdocs.css
+
+# docs/specs/ holds internal ecosystem architecture specs (PRD/TRD/PLAN/
+# ROADMAP) written for contributors, not user-facing documentation — kept
+# out of the published site entirely, not just out of the nav.
+exclude_docs: |
+  specs/
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Commands:
+      - Contributor: commands/contributor.md
+      - Team: commands/team.md
+      - DevX: commands/devx.md
+  - API Reference: https://pkg.go.dev/github.com/plexusone/devfolio
+  - Releases:
+      - v0.1.0: releases/v0.1.0.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/plexusone/devfolio
