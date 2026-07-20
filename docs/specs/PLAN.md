@@ -40,12 +40,12 @@
 
 ## Phase 3 — Aggregation and Period Reports (omnidevx-core)
 
-- [ ] Daily summary builder; weekly/monthly rollups derived from days (never month-only).
-- [ ] Identity resolution (`personId` + identities; hashed git emails; device-scoped local accounts).
-- [ ] `DeveloperPeriodReport` (`omnidevx.developer-period/v1`) with `combined` + `bySource` metrics, coverage scoring, and safe-to-combine rules.
-- [ ] Session-to-commit correlation (events near commits, AI-assisted commit linkage).
+- [x] Daily summary builder; weekly/monthly rollups derived from days (never month-only) (2026-07-19, `report` package: `BuildDaily`/`Rollup`/`Build`).
+- [x] Identity resolution (`personId` + identities; hashed git emails; device-scoped local accounts) (2026-07-19, `identity` package: `Map`/`Person`/`Identity`, `NewMap` rejects identities claimed by two people).
+- [x] `DeveloperPeriodReport` (`omnidevx.developer-period/v1`) with `combined` + `bySource` metrics, coverage scoring, and safe-to-combine rules (2026-07-19). Metrics computed from events collectible today (claudecode, git, genericotel); `devx.profile.snapshot`/`devx.contribution.snapshot` (period-total events) are counted in source coverage but not yet decomposed into daily buckets — surfaced as a `DataQuality` warning pending a provider-specific merge rule. Verified end-to-end: a 7-day report over 15,450 real stored events reproduces identically across runs (139k+-event local store from earlier sessions).
+- [ ] Session-to-commit correlation (events near commits, AI-assisted commit linkage) — deferred; distinct algorithm (time-window correlation between `ai.task.completed`/`ai.session.ended` and `devx.change.committed`) from the report/identity work above, not yet started.
 
-**Exit criteria:** reproducible weekly report from stored events; reprocessing with changed formulas yields updated reports without recollection.
+**Exit criteria:** reproducible weekly report from stored events; reprocessing with changed formulas yields updated reports without recollection. *Status: **MET** for the report/identity portion (2026-07-19) — session-to-commit correlation remains open and does not block Phase 4.*
 
 ## Phase 4 — SPACE Engine (incubated in omnidevx-core)
 

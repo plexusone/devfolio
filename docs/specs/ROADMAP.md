@@ -8,7 +8,7 @@
 |-----------|---------------|-------------|----------|-------------|----------|----------|------------|
 | M1 Contracts + store | v0.1.0 ◐ | — | — | — | — | — | 1 |
 | M2 Historical import | v0.2.0 ✅ | omnidevx pkg (Codex) ✅ | — | — | — | — | 2 |
-| M3 Period reports | v0.3.0 | — | — | — | — | — | 3 |
+| M3 Period reports | v0.3.0 ◐ | — | — | — | — | — | 3 |
 | M4 SPACE engine 🐕 | v0.4.0 (space/ incubated) | — | — | — | — | — | 4 |
 | M5 Value + GitHub + DORA | v0.5.0 | — | v0.1.0 (created; space/dora move here) | omnidevx pkg ◐ (profile collector done 2026-07-16) | adoption snapshot | — | 5 |
 | M6 DevFolio AI SPACE | — | — | — | — | — | v0.2.0 | 6 |
@@ -18,7 +18,7 @@
 
 🐕 M4 starts the continuous **dogfooding gate** (weekly self-reports on real data). 🚧 M9 is **blocked by the dogfooding gate**: ~8+ weeks of reviewed self-reports; noise metrics cut before team rollups multiply them.
 
-**Status (2026-07-16):** ✅ done · ◐ in progress. M2 is complete: all three importers (claudecode, Codex, git) plus the JSONL event store are implemented, tested (39 tests across four repos, lint-clean), and verified end-to-end on real data — ~139k events in `~/.plexusone/omnidevx/data/`, including 6,807 commits (61.8% AI-assisted since 2026-01-01). The git provider is built on `grokify/gogit` (gitscan renamed; see below). Remaining for M1: JSON Schemas, `providertest/`. Everything is local-only — no repo published yet; publish order is gogit (GitHub rename gitscan→gogit) → omnidevx-core → omni-openai → omnidevx (dropping replace directives).
+**Status (2026-07-19):** ✅ done · ◐ in progress. M1/M2 shipped together as `omnidevx-core` v0.1.0 (published and tagged, superseding the original separate v0.1.0/v0.2.0 split in the per-repo table below — versions here are targets, not commitments): canonical `Event` IR, local JSONL store, and all three importers (claudecode, Codex, git). `omni-github` v0.5.0 and `omnidevx` v0.1.0 have also published and tagged. M3 is in progress, unreleased on top of `omnidevx-core` v0.1.0: `report` (daily summaries + `DeveloperPeriodReport` rollup) and `identity` (personId resolution) packages landed, verified against the real local store (7-day report over 15,450 events, deterministic across runs); session↔commit correlation is the remaining M3 item. Remaining for M1 (carries forward, not yet released): JSON Schemas, `providertest/`.
 
 ## Per-Repo Detail
 
@@ -26,7 +26,7 @@
 
 - **v0.1.0 — Contracts + store.** Canonical `Event` IR (`omnidevx.event/v1`) shaped by the Phase 0 spike data; `Collector` interface with constructor-injection composition (no priority registry yet); identity types; local event store at `~/.plexusone/omnidevx/data/` (daily JSONL per source, metadata-only privacy rule enforced at the type level); embedded generated schemas; `providertest/` conformance suite.
 - **v0.2.0 — Importers.** `providers/claudecode` (stdlib-only session-JSONL reader) and `providers/git` with AI co-author attribution (ported from devfolio).
-- **v0.3.0 — Aggregation.** Daily/weekly/monthly rollups, identity resolution, `DeveloperPeriodReport` (`omnidevx.developer-period/v1`), session↔commit correlation, reprocessing from the stored events.
+- **v0.3.0 — Aggregation ◐.** `report` and `identity` packages landed 2026-07-19: daily/weekly/monthly rollups (`Build`/`BuildDaily`/`Rollup`), identity resolution (`identity.Map`, hashed git emails, device-scoped local accounts), `DeveloperPeriodReport` (`omnidevx.developer-period/v1`) with combined/bySource metrics and coverage scoring — verified end-to-end on real data (7-day report over 15,450 stored events, reproducible across runs). Remaining: session↔commit correlation, JSON Schema for the report type (carries over from M1's remaining schema work).
 - **v0.4.0 — SPACE engine (incubated).** `space/` package with `Traditional`/`AIAugmented` profiles, required-signal declarations, coverage scoring, solo-developer scorecard.
 - **v0.5.0 — Value provider + extraction.** `providers/structuredchangelog` with category → value-class mapping; `space/` (and new `dora/`) extracted to the `omnidevx` batteries repo.
 - **v0.6.0 — Live collection.** `providers/claudecode/otel.go` + hooks package, `providers/genericotel`, `providers/survey`.
