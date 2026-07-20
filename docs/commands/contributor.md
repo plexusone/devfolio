@@ -36,6 +36,19 @@ devfolio contributor profile --user grokify --org fleet-ops --org agentplexus
 devfolio contributor profile --user grokify --since 2024-01-01
 ```
 
+### Local repo detection
+
+By default, for each repository DevFolio checks whether a local clone
+exists under `~/go/src/github.com` (or an additional path passed via
+`--local-path`) and, if so, reads contribution data from `git log`
+locally instead of the GitHub API — faster, avoids rate limits, and sees
+full commit messages for AI co-author trailer detection. It falls back to
+the API automatically if no local clone is found or the local read fails.
+Pass `--api-only` to skip local detection entirely and always use the API.
+
+Progress (repository fetch, per-repo processing) is reported to stderr as
+profile generation runs.
+
 !!! note "`--dashboard` chart rendering"
     `--dashboard` uses an older chart-widget shape (`output/dashboard`
     package) that predates dashforge's current viewer format. Metric and
