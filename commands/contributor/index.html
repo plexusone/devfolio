@@ -458,6 +458,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#local-repo-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local repo detection
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -645,6 +656,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.2.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.1.0/" class="md-nav__link">
         
   
@@ -716,6 +755,17 @@
     <span class="md-ellipsis">
       
         Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-repo-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local repo detection
       
     </span>
   </a>
@@ -830,6 +880,16 @@
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Filter by date range</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>devfolio<span class="w"> </span>contributor<span class="w"> </span>profile<span class="w"> </span>--user<span class="w"> </span>grokify<span class="w"> </span>--since<span class="w"> </span><span class="m">2024</span>-01-01
 </code></pre></div>
+<h3 id="local-repo-detection">Local repo detection<a class="headerlink" href="#local-repo-detection" title="Permanent link">&para;</a></h3>
+<p>By default, for each repository DevFolio checks whether a local clone
+exists under <code>~/go/src/github.com</code> (or an additional path passed via
+<code>--local-path</code>) and, if so, reads contribution data from <code>git log</code>
+locally instead of the GitHub API — faster, avoids rate limits, and sees
+full commit messages for AI co-author trailer detection. It falls back to
+the API automatically if no local clone is found or the local read fails.
+Pass <code>--api-only</code> to skip local detection entirely and always use the API.</p>
+<p>Progress (repository fetch, per-repo processing) is reported to stderr as
+profile generation runs.</p>
 <div class="admonition note">
 <p class="admonition-title"><code>--dashboard</code> chart rendering</p>
 <p><code>--dashboard</code> uses an older chart-widget shape (<code>output/dashboard</code>
