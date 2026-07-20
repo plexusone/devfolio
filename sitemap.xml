@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://plexusone.github.io/devfolio/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/devfolio/getting-started/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/devfolio/commands/contributor/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/devfolio/commands/devx/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/devfolio/commands/team/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/devfolio/releases/v0.1.0/</loc>
+         <lastmod>2026-07-20</lastmod>
+    </url>
+</urlset>
