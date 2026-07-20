@@ -3,8 +3,8 @@
 [![Go CI][go-ci-svg]][go-ci-url]
 [![Go Lint][go-lint-svg]][go-lint-url]
 [![Go SAST][go-sast-svg]][go-sast-url]
-[![Go Report Card][goreport-svg]][goreport-url]
 [![Docs][docs-godoc-svg]][docs-godoc-url]
+[![Docs][docs-mkdoc-svg]][docs-mkdoc-url]
 [![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
@@ -52,6 +52,14 @@ export GITHUB_TOKEN=your_token
 devfolio contributor profile --user grokify -o profile.json
 ```
 
+### DevX Usage Dashboard
+
+```bash
+# Requires events already collected into the local OmniDevX store
+# (via omnidevx-core providers — this command only reads/reports)
+devfolio devx dashboard --person person:jane -o dashboard.json
+```
+
 ## Commands
 
 ### Team Commands
@@ -74,11 +82,27 @@ Flags:
 devfolio contributor profile [flags]
 
 Flags:
-      --user string     GitHub username (required)
-  -o, --output string   Output file (default: stdout)
-      --org strings     Filter to specific organizations
-      --since string    Start date (YYYY-MM-DD)
-      --until string    End date (YYYY-MM-DD)
+      --user string         GitHub username (required)
+  -o, --output string       Output file (default: stdout)
+      --org strings         Filter to specific organizations
+      --since string        Start date (YYYY-MM-DD)
+      --until string        End date (YYYY-MM-DD)
+      --api-only            Force API-only mode, skip local repo detection
+      --local-path string   Additional local path to search for repos
+      --dashboard           Output dashforge-compatible dashboard JSON
+```
+
+### DevX Commands
+
+```bash
+# Export a dashforge dashboard from the local OmniDevX store
+devfolio devx dashboard [flags]
+
+Flags:
+      --person string      Canonical personId to report on (required)
+      --days int            Number of days ending today to report on (default 30)
+      --store-dir string    OmniDevX store directory (default: ~/.plexusone/omnidevx/data)
+  -o, --output string       Output file (default: stdout)
 ```
 
 ## Output Formats
@@ -93,7 +117,21 @@ The velocity dashboard includes:
 - Activity heatmap data (GitHub-style)
 - Per-project contribution breakdown
 
-Compatible with [dashforge](https://github.com/grokify/dashforge) static dashboards.
+Compatible with [dashforge](https://github.com/plexusone/dashforge) static dashboards.
+
+### DevX Usage Dashboard
+
+Built from the [OmniDevX](https://github.com/plexusone/omnidevx-core)
+local event store (Claude Code, Codex CLI, git, and GitHub activity in one
+canonical model), exported as a [dashforge](https://github.com/plexusone/dashforge)
+dashboard: headline metric tiles (sessions, prompts, commits, AI-assisted
+%, tool calls, cost, coverage), daily activity/cost charts, and a
+source-coverage table. Unlike `contributor profile --dashboard`, this
+export is built against dashforge's `dashboardir` package directly, so
+its chart widgets render correctly in dashforge's current viewer.
+
+Can also be served through [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio)'s
+DevX panel by writing the output to `~/.plexusone/omnidevx/dashboard.json`.
 
 ### Contributor Profile
 
@@ -156,8 +194,9 @@ This data can be used to:
 
 ## Requirements
 
-- Go 1.25+
-- `GITHUB_TOKEN` environment variable for GitHub API access
+- Go 1.26 or later
+- `GITHUB_TOKEN` environment variable (for `contributor profile` only —
+  `team velocity` and `devx dashboard` don't call the GitHub API)
 
 ## Authentication
 
@@ -203,11 +242,17 @@ Create at: https://github.com/settings/tokens/new
 
 Add `repo` scope instead of `public_repo` if you need access to private repositories.
 
+## Documentation
+
+Full documentation at [plexusone.github.io/devfolio](https://plexusone.github.io/devfolio)
+
 ## Related Projects
 
+- [omnidevx-core](https://github.com/plexusone/omnidevx-core) - Canonical event model, local store, period-report aggregation
 - [structured-changelog](https://github.com/grokify/structured-changelog) - JSON changelog format and aggregation
 - [gogithub](https://github.com/grokify/gogithub) - GitHub API utilities
-- [dashforge](https://github.com/grokify/dashforge) - Static dashboard generation
+- [dashforge](https://github.com/plexusone/dashforge) - Static dashboard generation (the `devx dashboard` export format)
+- [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio) - renders `devx dashboard` output in its DevX panel
 
 ## License
 
@@ -223,9 +268,11 @@ MIT
  [goreport-url]: https://goreportcard.com/report/github.com/plexusone/devfolio
  [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/devfolio
  [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/devfolio
+ [docs-mkdoc-svg]: https://img.shields.io/badge/Go-dev%20guide-blue.svg
+ [docs-mkdoc-url]: https://plexusone.github.io/devfolio
  [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
- [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=grokify%2Fcoreforge
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fdevfolio
  [loc-svg]: https://tokei.rs/b1/github/plexusone/devfolio
  [repo-url]: https://github.com/plexusone/devfolio
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/devfolio/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/devfolio/blob/main/LICENSE
