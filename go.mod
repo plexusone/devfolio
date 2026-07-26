@@ -1,19 +1,17 @@
 module github.com/plexusone/devfolio
 
-go 1.26.4
+go 1.26.5
 
 require (
 	github.com/google/go-github/v88 v88.0.0
-	github.com/grokify/gogit v0.6.0
+	github.com/grokify/gogit v0.7.0
 	github.com/grokify/gogithub v0.14.0
 	github.com/grokify/mogo v0.74.6
-	github.com/grokify/structured-changelog v0.14.1
+	github.com/grokify/structured-changelog v0.15.0
 	github.com/plexusone/omnidevx-core v0.3.0
-	github.com/plexusone/uiforge v0.3.0
+	github.com/plexusone/uiforge v0.4.0
 	github.com/spf13/cobra v1.10.2
 )
-
-replace github.com/plexusone/uiforge => ../uiforge
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
