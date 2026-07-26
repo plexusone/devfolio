@@ -3,7 +3,7 @@ package devxdashboard
 import (
 	"encoding/json"
 
-	"github.com/plexusone/dashforge/dashboardir"
+	"github.com/plexusone/uiforge/dashboardir"
 )
 
 func buildWidgets() []dashboardir.Widget {
@@ -67,7 +67,7 @@ func metricWidget(id, title string, p dashboardir.Position, dataSourceID, valueF
 // chartMark describes one line-chart series. Marshaled by hand (not via a
 // dashboardir type — chart config has no concrete Go type in dashboardir,
 // it's opaque JSON matching echartify's ChartIR) to match exactly what
-// dashforge's viewer parses: marks[] with geometry/encode.
+// uiforge's viewer parses: marks[] with geometry/encode.
 type chartMark struct {
 	ID       string
 	Geometry string

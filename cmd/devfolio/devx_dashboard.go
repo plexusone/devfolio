@@ -26,14 +26,14 @@ var (
 
 var devxDashboardCmd = &cobra.Command{
 	Use:   "dashboard",
-	Short: "Export a dashforge dashboard from the local OmniDevX store",
+	Short: "Export a uiforge dashboard from the local OmniDevX store",
 	Long: `Build a DeveloperPeriodReport from locally collected OmniDevX events
-and export it as a dashforge Dashboard JSON file: headline metric tiles,
+and export it as a uiforge Dashboard JSON file: headline metric tiles,
 daily activity/cost charts, and a source-coverage table.
 
-The dashboard is a single portable JSON file — open it in dashforge's
+The dashboard is a single portable JSON file — open it in uiforge's
 static viewer (viewer/index.html?dashboard=<file>) or validate it with
-"dashforge validate <file>".
+"uiforge validate <file>".
 
 Examples:
   # Last 30 days, written to stdout

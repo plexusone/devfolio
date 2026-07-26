@@ -9,7 +9,7 @@ import (
 	"github.com/plexusone/devfolio/contributor"
 )
 
-// ExportContributorDashboard converts a contributor Profile to a dashforge Dashboard.
+// ExportContributorDashboard converts a contributor Profile to a uiforge Dashboard.
 func ExportContributorDashboard(profile *contributor.Profile) (*Dashboard, error) {
 	dashboard := &Dashboard{
 		ID:          fmt.Sprintf("contributor-%s", profile.Username),

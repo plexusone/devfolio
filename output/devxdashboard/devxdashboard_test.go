@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/plexusone/dashforge/dashboardir"
+	"github.com/plexusone/uiforge/dashboardir"
 	omnidevx "github.com/plexusone/omnidevx-core"
 	report "github.com/plexusone/omnidevx-core/report"
 )
@@ -75,7 +75,7 @@ func TestExportProducesValidDashboard(t *testing.T) {
 	}
 
 	// Round-trips through JSON without error (the artifact devfolio writes
-	// to disk and hands to dashforge).
+	// to disk and hands to uiforge).
 	data, err := json.Marshal(dash)
 	if err != nil {
 		t.Fatalf("marshal: %v", err)

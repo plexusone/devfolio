@@ -1,9 +1,9 @@
 // Package devxdashboard projects an omnidevx-core DeveloperPeriodReport into
-// a dashforge Dashboard: the disclosure-safe view a caller has already
+// a uiforge Dashboard: the disclosure-safe view a caller has already
 // chosen to show (this package performs no redaction itself — callers pass
 // in whatever report they intend to display).
 //
-// Chart widget config is hand-built JSON matching the shape dashforge's own
+// Chart widget config is hand-built JSON matching the shape uiforge's own
 // viewer (viewer/index.html, compileChartIR) actually parses — marks[] with
 // geometry/encode, not the singular mark/encodings shape used by devfolio's
 // older output/dashboard package, which predates that shape and does not
@@ -16,7 +16,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/plexusone/dashforge/dashboardir"
+	"github.com/plexusone/uiforge/dashboardir"
 	report "github.com/plexusone/omnidevx-core/report"
 )
 
@@ -31,7 +31,7 @@ type DailyPoint struct {
 	CostUSD float64 `json:"costUsd"`
 }
 
-// Export converts a DeveloperPeriodReport into a dashforge Dashboard: eight
+// Export converts a DeveloperPeriodReport into a uiforge Dashboard: eight
 // headline metric tiles, a daily commits/prompts chart, a daily cost chart,
 // and a source-coverage table. All data is embedded inline, so the result
 // is a single portable JSON file.
@@ -85,7 +85,7 @@ func buildDataSources(r *report.DeveloperPeriodReport, daily []DailyPoint) ([]da
 	}
 
 	// Percent-format metric widgets expect a pre-scaled 0-100 value, not a
-	// 0-1 fraction (matches the established convention in dashforge's own
+	// 0-1 fraction (matches the established convention in uiforge's own
 	// compliance-dashboard example; the viewer's format="percent" heuristic
 	// mishandles fractional values below 1 either way, so this is also the
 	// only convention that renders our headline values correctly).
@@ -121,7 +121,7 @@ func buildDataSources(r *report.DeveloperPeriodReport, daily []DailyPoint) ([]da
 	}, nil
 }
 
-// sourceRow flattens SourceCoverage for table rendering — dashforge's table
+// sourceRow flattens SourceCoverage for table rendering — uiforge's table
 // widget binds columns to top-level fields, not nested paths.
 type sourceRow struct {
 	Source        string  `json:"source"`

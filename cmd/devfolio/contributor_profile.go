@@ -44,7 +44,7 @@ Examples:
   # Generate profile for a user
   devfolio contributor profile --user grokify -o profile.json
 
-  # Generate dashforge-compatible dashboard
+  # Generate uiforge-compatible dashboard
   devfolio contributor profile --user grokify --dashboard -o dashboard.json
 
   # Limit to specific organizations
@@ -63,7 +63,7 @@ func init() {
 	contributorProfileCmd.Flags().StringArrayVar(&contribProfileOrgs, "org", nil, "Filter to specific organizations")
 	contributorProfileCmd.Flags().BoolVar(&contribProfileAPIOnly, "api-only", false, "Force API-only mode, skip local repo detection")
 	contributorProfileCmd.Flags().StringVar(&contribProfileLocalPath, "local-path", "", "Additional local path to search for repos")
-	contributorProfileCmd.Flags().BoolVar(&contribProfileDashboard, "dashboard", false, "Output dashforge-compatible dashboard JSON")
+	contributorProfileCmd.Flags().BoolVar(&contribProfileDashboard, "dashboard", false, "Output uiforge-compatible dashboard JSON")
 	_ = contributorProfileCmd.MarkFlagRequired("user")
 	contributorCmd.AddCommand(contributorProfileCmd)
 }
@@ -138,7 +138,7 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 	// Output
 	var output []byte
 	if contribProfileDashboard {
-		// Export as dashforge dashboard
+		// Export as uiforge dashboard
 		dash, err := dashboard.ExportContributorDashboard(profile)
 		if err != nil {
 			return fmt.Errorf("exporting dashboard: %w", err)

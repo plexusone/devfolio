@@ -1,10 +1,10 @@
-// Package dashboard provides dashforge-compatible dashboard export.
+// Package dashboard provides uiforge-compatible dashboard export.
 package dashboard
 
 import "encoding/json"
 
 // Dashboard is the top-level container for a dashboard definition.
-// Compatible with dashforge dashboardir.Dashboard.
+// Compatible with uiforge dashboardir.Dashboard.
 type Dashboard struct {
 	Schema      string       `json:"$schema,omitempty"`
 	ID          string       `json:"id"`
