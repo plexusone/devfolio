@@ -97,18 +97,28 @@ type AICollabStats struct {
 	AICommitPercent  float64               `json:"aiCommitPercent"`
 	ByTool           map[string]AIToolStat `json:"byTool"`
 	MostUsedTool     string                `json:"mostUsedTool,omitempty"`
-	FirstAICommit    string                `json:"firstAiCommit,omitempty"`    // Date of first AI-assisted commit
-	RecentTrend      string                `json:"recentTrend,omitempty"`      // increasing, stable, decreasing
-	AIActivity       []DailyActivity       `json:"aiActivity,omitempty"`       // Daily AI-assisted commits for heatmap
+	MostUsedModel    string                `json:"mostUsedModel,omitempty"`   // e.g., "Claude Code/Sonnet 4"
+	FirstAICommit    string                `json:"firstAiCommit,omitempty"`   // Date of first AI-assisted commit
+	RecentTrend      string                `json:"recentTrend,omitempty"`     // increasing, stable, decreasing
+	AIActivity       []DailyActivity       `json:"aiActivity,omitempty"`      // Daily AI-assisted commits for heatmap
 }
 
 // AIToolStat holds statistics for a specific AI coding tool.
 type AIToolStat struct {
-	Name        string `json:"name"`
-	Commits     int    `json:"commits"`
-	FirstUsed   string `json:"firstUsed,omitempty"`   // YYYY-MM-DD
-	LastUsed    string `json:"lastUsed,omitempty"`    // YYYY-MM-DD
-	Recognized  bool   `json:"recognized"`            // true if GitHub recognizes the co-author
+	Name        string                  `json:"name"`
+	Commits     int                     `json:"commits"`
+	FirstUsed   string                  `json:"firstUsed,omitempty"`   // YYYY-MM-DD
+	LastUsed    string                  `json:"lastUsed,omitempty"`    // YYYY-MM-DD
+	Recognized  bool                    `json:"recognized"`            // true if GitHub recognizes the co-author
+	ByModel     map[string]AIModelStat  `json:"byModel,omitempty"`     // Per-model breakdown
+}
+
+// AIModelStat holds statistics for a specific model within a tool.
+type AIModelStat struct {
+	Model     string `json:"model"`               // e.g., "Sonnet 4", "Opus 4.5", "gemini-2.5-pro"
+	Commits   int    `json:"commits"`
+	FirstUsed string `json:"firstUsed,omitempty"` // YYYY-MM-DD
+	LastUsed  string `json:"lastUsed,omitempty"`  // YYYY-MM-DD
 }
 
 // KnownAITool represents a known AI coding assistant.
