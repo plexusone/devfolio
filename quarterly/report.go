@@ -51,10 +51,12 @@ type TokenSpendSummary struct {
 
 // ModelTokens holds per-model token breakdown.
 type ModelTokens struct {
-	Model        string  `json:"model"`
-	InputTokens  int64   `json:"inputTokens"`
-	OutputTokens int64   `json:"outputTokens"`
-	CostUSD      float64 `json:"costUsd,omitempty"`
+	Model               string  `json:"model"`
+	InputTokens         int64   `json:"inputTokens"`
+	OutputTokens        int64   `json:"outputTokens"`
+	CacheReadTokens     int64   `json:"cacheReadTokens,omitempty"`
+	CacheCreationTokens int64   `json:"cacheCreationTokens,omitempty"`
+	CostUSD             float64 `json:"costUsd,omitempty"`
 }
 
 // SourceTokens holds per-source token breakdown.
@@ -69,13 +71,13 @@ type SourceTokens struct {
 // Inputs (tokens/dollars) → Outputs (LOC/releases/repos) → Categories
 type SDLCFlow struct {
 	// Inputs
-	InputTokens int64   `json:"inputTokens"`
+	InputTokens   int64   `json:"inputTokens"`
 	OutputDollars float64 `json:"outputDollars"`
 
 	// Outputs (intermediate)
-	TotalLOC     int `json:"totalLoc"`      // insertions + deletions
+	TotalLOC      int `json:"totalLoc"` // insertions + deletions
 	TotalReleases int `json:"totalReleases"`
-	TotalRepos   int `json:"totalRepos"`    // contributed + created
+	TotalRepos    int `json:"totalRepos"` // contributed + created
 
 	// Category breakdown from commits
 	ByCategory []CategoryFlow `json:"byCategory"`
