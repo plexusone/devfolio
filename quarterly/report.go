@@ -36,14 +36,14 @@ type Report struct {
 }
 
 // TokenSpendSummary holds AI token consumption for the quarter.
-// ByModel is blocked on INIT-DEVXREPORTS-001 phases 1+3.
 type TokenSpendSummary struct {
 	TotalInputTokens   int64   `json:"totalInputTokens"`
 	TotalOutputTokens  int64   `json:"totalOutputTokens"`
 	TotalCacheRead     int64   `json:"totalCacheRead"`
 	TotalCacheCreation int64   `json:"totalCacheCreation"`
 	TotalCostUSD       float64 `json:"totalCostUsd,omitempty"`
-	// ByModel is nil until INIT-DEVXREPORTS-001 completes.
+	EstimatedCostUSD   float64 `json:"estimatedCostUsd,omitempty"` // subset backfilled from pricing
+	// ByModel breaks down tokens/cost by model (e.g., "claude-sonnet-5").
 	ByModel map[string]ModelTokens `json:"byModel,omitempty"`
 	// BySource aggregates by provider/product (e.g., "anthropic/claude-code").
 	BySource map[string]SourceTokens `json:"bySource,omitempty"`

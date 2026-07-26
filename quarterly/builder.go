@@ -2,13 +2,16 @@ package quarterly
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/grokify/gogit"
 	"github.com/grokify/gogithub/profile"
 	"github.com/grokify/structured-changelog/changelog"
+	"github.com/plexusone/omnidevx-core/report"
 )
 
 // BuilderOptions configures quarterly report generation.
@@ -22,6 +25,9 @@ type BuilderOptions struct {
 
 	// Path to gogithub profile stats directory (contains report.json).
 	StatsDir string
+
+	// Path to omnidevx period report directory (contains period JSON files).
+	OmniDevXDir string
 
 	// Workers for parallel repo processing; 0 = GOMAXPROCS.
 	Workers int
@@ -70,6 +76,13 @@ func (b *Builder) Build(ctx context.Context) (*Report, error) {
 		}
 	}
 
+	if b.opts.OmniDevXDir != "" {
+		tokenSpend, err := b.loadTokenSpend(since, until)
+		if err == nil {
+			r.TokenSpend = tokenSpend
+		}
+	}
+
 	r.SDLCFlow = b.buildSDLCFlow(r)
 
 	return r, nil
@@ -96,17 +109,42 @@ func (b *Builder) changelogPaths() []string {
 // loadGitHubStats loads the profile stats report and extracts the quarter.
 func (b *Builder) loadGitHubStats() (*profile.AggregateStats, error) {
 	reportPath := filepath.Join(b.opts.StatsDir, "report.json")
-	report, err := profile.LoadStatsReport(reportPath)
+	rpt, err := profile.LoadStatsReport(reportPath)
 	if err != nil {
 		return nil, err
 	}
 
-	quarter := report.GetQuarter(b.opts.Year, b.opts.Quarter)
+	quarter := rpt.GetQuarter(b.opts.Year, b.opts.Quarter)
 	if quarter == nil {
 		return nil, fmt.Errorf("quarter Q%d %d not found in stats report", b.opts.Quarter, b.opts.Year)
 	}
 
 	return &quarter.Stats, nil
+}
+
+// loadTokenSpend loads the omnidevx period report for the quarter.
+func (b *Builder) loadTokenSpend(since, until time.Time) (*TokenSpendSummary, error) {
+	// Look for a period report file matching the quarter
+	// Format: period-YYYY-QN.json or similar
+	pattern := filepath.Join(b.opts.OmniDevXDir, fmt.Sprintf("period-%d-Q%d.json", b.opts.Year, b.opts.Quarter))
+	rpt, err := loadPeriodReport(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return TokenSpendFromReport(rpt), nil
+}
+
+// loadPeriodReport reads a DeveloperPeriodReport from a JSON file.
+func loadPeriodReport(path string) (*report.DeveloperPeriodReport, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var rpt report.DeveloperPeriodReport
+	if err := json.Unmarshal(data, &rpt); err != nil {
+		return nil, err
+	}
+	return &rpt, nil
 }
 
 // buildSDLCFlow computes the Sankey flow from collected data.
