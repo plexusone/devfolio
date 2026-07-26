@@ -8,16 +8,12 @@ require (
 	github.com/grokify/gogithub v0.14.0
 	github.com/grokify/mogo v0.74.6
 	github.com/grokify/structured-changelog v0.14.1
-	github.com/plexusone/omnidevx-core v0.2.0
+	github.com/plexusone/omnidevx-core v0.3.0
 	github.com/plexusone/uiforge v0.3.0
 	github.com/spf13/cobra v1.10.2
 )
 
 replace github.com/plexusone/uiforge => ../uiforge
-
-replace github.com/grokify/gogit => ../../grokify/gogit
-
-replace github.com/grokify/structured-changelog => ../../grokify/structured-changelog
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
