@@ -127,7 +127,7 @@ func buildPeriodDataSources(pr *PeriodReport) ([]dashboardir.DataSource, error) 
 	})
 
 	// Model breakdown data sources
-	if r.Metrics.ByModel != nil && len(r.Metrics.ByModel) > 0 {
+	if len(r.Metrics.ByModel) > 0 {
 		// Donut data: tokens by model
 		tokensByModel := buildModelDonutData(r.Metrics.ByModel, "input_tokens", "output_tokens")
 		tokensByModelJSON, _ := json.Marshal(tokensByModel)

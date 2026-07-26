@@ -218,7 +218,6 @@ func buildDashboardWidgets(r *Report) []dashboardir.Widget {
 		if len(r.TokenSpend.ByModel) > 0 {
 			widgets = append(widgets, barChartWidget("token-model-chart", "Cost by Model",
 				pos(0, row, 12, 5), "token-models", "model", "cost"))
-			row += 5
 		}
 	}
 

@@ -64,7 +64,9 @@ func init() {
 	quarterlyReportCmd.Flags().StringVar(&qrFormat, "format", "html", "Output format: html, json, dashboard")
 	quarterlyReportCmd.Flags().StringVar(&qrChartEngine, "chart-engine", "svg", "Chart engine: svg (self-contained), echarts (CDN)")
 
-	quarterlyReportCmd.MarkFlagRequired("username")
+	if err := quarterlyReportCmd.MarkFlagRequired("username"); err != nil {
+		panic(err)
+	}
 }
 
 func runQuarterlyReport(cmd *cobra.Command, args []string) error {
@@ -344,28 +346,30 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 `)
 
 	// Header
-	sb.WriteString(fmt.Sprintf(`<h1>%s</h1>`, r.Label))
-	sb.WriteString(fmt.Sprintf(`<p class="subtitle">Developer Report for <strong>%s</strong> &middot; %s to %s</p>`,
-		r.Username, r.Since.Format("Jan 2, 2006"), r.Until.Add(-1).Format("Jan 2, 2006")))
+	fmt.Fprintf(&sb, `<h1>%s</h1>`, r.Label)
+	fmt.Fprintf(&sb, `<p class="subtitle">Developer Report for <strong>%s</strong> &middot; %s to %s</p>`,
+		r.Username, r.Since.Format("Jan 2, 2006"), r.Until.Add(-1).Format("Jan 2, 2006"))
 
 	// Summary stats
 	sb.WriteString(`<h2>Summary</h2>`)
 	sb.WriteString(`<div class="grid">`)
 
 	if r.GitHubStats != nil {
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Commits</div><div class="card-value">%s</div></div>`,
-			formatNumber(r.GitHubStats.Commits)))
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Net Additions</div><div class="card-value">+%s</div><div class="card-detail">+%s / -%s</div></div>`,
-			formatNumber(r.GitHubStats.NetAdditions), formatNumber(r.GitHubStats.Additions), formatNumber(r.GitHubStats.Deletions)))
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Releases</div><div class="card-value">%d</div></div>`,
-			r.GitHubStats.Releases))
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Repos</div><div class="card-value">%d</div><div class="card-detail">%d contributed, %d created</div></div>`,
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Commits</div><div class="card-value">%s</div></div>`,
+			formatNumber(r.GitHubStats.Commits))
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Net Additions</div><div class="card-value">+%s</div><div class="card-detail">+%s / -%s</div></div>`,
+			formatNumber(r.GitHubStats.NetAdditions), formatNumber(r.GitHubStats.Additions), formatNumber(r.GitHubStats.Deletions))
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Releases</div><div class="card-value">%d</div></div>`,
+			r.GitHubStats.Releases)
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Repos</div><div class="card-value">%d</div><div class="card-detail">%d contributed, %d created</div></div>`,
 			r.GitHubStats.RepoCountContributed+r.GitHubStats.RepoCountCreated,
-			r.GitHubStats.RepoCountContributed, r.GitHubStats.RepoCountCreated))
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">PRs</div><div class="card-value">%d</div></div>`,
-			r.GitHubStats.PRs))
-		sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Reviews</div><div class="card-value">%d</div></div>`,
-			r.GitHubStats.Reviews))
+			r.GitHubStats.RepoCountContributed, r.GitHubStats.RepoCountCreated)
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">PRs</div><div class="card-value">%d</div></div>`,
+			r.GitHubStats.PRs)
+
+		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Reviews</div><div class="card-value">%d</div></div>`,
+			r.GitHubStats.Reviews)
+
 	}
 
 	sb.WriteString(`</div>`)
@@ -391,12 +395,13 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				pct = float64(cat.Commits) / float64(r.CommitStats.TotalStats.Commits) * 100
 			}
 			barWidth := float64(cat.Commits) / float64(maxCommits) * 100
-			sb.WriteString(fmt.Sprintf(`<li class="category-item">
+			fmt.Fprintf(&sb, `<li class="category-item">
 				<span class="category-name">%s</span>
 				<span class="category-bar" style="width: %.0f%%"></span>
 				<span class="category-pct">%.1f%%</span>
 				<span class="category-count">%d</span>
-			</li>`, cat.Category, barWidth, pct, cat.Commits))
+			</li>`, cat.Category, barWidth, pct, cat.Commits)
+
 		}
 		sb.WriteString(`</ul>`)
 		sb.WriteString(`</div>`)
@@ -443,24 +448,25 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				pct = float64(cat.loc) / float64(totalLOC) * 100
 			}
 			barWidth := float64(cat.loc) / float64(maxLOC) * 100
-			sb.WriteString(fmt.Sprintf(`<li class="category-item">
+			fmt.Fprintf(&sb, `<li class="category-item">
 				<span class="category-name">%s</span>
 				<span class="category-bar" style="width: %.0f%%"></span>
 				<span class="category-pct">%.1f%%</span>
 				<span class="category-count">%s</span>
-			</li>`, cat.category, barWidth, pct, formatNumber(cat.loc)))
+			</li>`, cat.category, barWidth, pct, formatNumber(cat.loc))
+
 		}
 		sb.WriteString(`</ul>`)
-		sb.WriteString(fmt.Sprintf(`<p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">Total: %s lines (insertions + deletions)</p>`, formatNumber(totalLOC)))
+		fmt.Fprintf(&sb, `<p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">Total: %s lines (insertions + deletions)</p>`, formatNumber(totalLOC))
 		sb.WriteString(`</div>`)
 
 		// AI-assisted stats
 		if r.CommitStats.AIStats.AIAssistedCount > 0 {
 			sb.WriteString(`<h2>AI-Assisted Development</h2>`)
 			sb.WriteString(`<div class="card">`)
-			sb.WriteString(fmt.Sprintf(`<div class="card-title">AI-Assisted Commits</div>`))
-			sb.WriteString(fmt.Sprintf(`<div class="card-value">%d <span style="font-size: 1rem; font-weight: normal; color: var(--text-muted)">(%.1f%%)</span></div>`,
-				r.CommitStats.AIStats.AIAssistedCount, r.CommitStats.AIStats.AIAssistedPct))
+			sb.WriteString(`<div class="card-title">AI-Assisted Commits</div>`)
+			fmt.Fprintf(&sb, `<div class="card-value">%d <span style="font-size: 1rem; font-weight: normal; color: var(--text-muted)">(%.1f%%)</span></div>`,
+				r.CommitStats.AIStats.AIAssistedCount, r.CommitStats.AIStats.AIAssistedPct)
 
 			// Per-tool breakdown
 			if len(r.CommitStats.AIStats.ByTool) > 0 {
@@ -472,8 +478,9 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				for tool, stats := range r.CommitStats.AIStats.ByTool {
 					pct := float64(stats.Commits) / float64(r.CommitStats.AIStats.AIAssistedCount) * 100
 					color := colors[i%len(colors)]
-					sb.WriteString(fmt.Sprintf(`<div class="ai-bar-segment" style="width: %.1f%%; background: %s" title="%s: %d commits">%s</div>`,
-						pct, color, tool, stats.Commits, tool))
+					fmt.Fprintf(&sb, `<div class="ai-bar-segment" style="width: %.1f%%; background: %s" title="%s: %d commits">%s</div>`,
+						pct, color, tool, stats.Commits, tool)
+
 					i++
 				}
 				sb.WriteString(`</div>`)
@@ -499,8 +506,9 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				})
 
 				for _, m := range models {
-					sb.WriteString(fmt.Sprintf(`<div class="model-item"><span class="model-name">%s</span><span>%d commits</span></div>`,
-						m.key, m.stats.Commits))
+					fmt.Fprintf(&sb, `<div class="model-item"><span class="model-name">%s</span><span>%d commits</span></div>`,
+						m.key, m.stats.Commits)
+
 				}
 				sb.WriteString(`</div>`)
 			}
@@ -512,8 +520,8 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 	// Highlights
 	if r.Highlights != nil && len(r.Highlights.ByRepo) > 0 {
 		sb.WriteString(`<h2>Project Highlights</h2>`)
-		sb.WriteString(fmt.Sprintf(`<p class="subtitle">%d releases across %d projects</p>`,
-			len(r.Highlights.TopReleases), r.Highlights.RepoCount))
+		fmt.Fprintf(&sb, `<p class="subtitle">%d releases across %d projects</p>`,
+			len(r.Highlights.TopReleases), r.Highlights.RepoCount)
 
 		// Build repo stats lookup for commits/LOC
 		repoStats := make(map[string]gogit.RepoCommitStats)
@@ -553,40 +561,40 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				break
 			}
 			sb.WriteString(`<div class="card" style="padding: 1rem;">`)
-			sb.WriteString(fmt.Sprintf(`<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">`))
-			sb.WriteString(fmt.Sprintf(`<span class="highlight-project" style="font-size: 1rem;">%s</span>`, rel.ranked.Project))
-			sb.WriteString(fmt.Sprintf(`<span class="highlight-version">%s</span>`, rel.ranked.Release.Version))
+			sb.WriteString(`<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">`)
+			fmt.Fprintf(&sb, `<span class="highlight-project" style="font-size: 1rem;">%s</span>`, rel.ranked.Project)
+			fmt.Fprintf(&sb, `<span class="highlight-version">%s</span>`, rel.ranked.Release.Version)
 			sb.WriteString(`</div>`)
 
 			// Stats row
 			if rel.commits > 0 || rel.loc > 0 {
 				sb.WriteString(`<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">`)
 				if rel.commits > 0 {
-					sb.WriteString(fmt.Sprintf(`%d commits`, rel.commits))
+					fmt.Fprintf(&sb, `%d commits`, rel.commits)
 				}
 				if rel.loc > 0 {
 					if rel.commits > 0 {
 						sb.WriteString(` · `)
 					}
-					sb.WriteString(fmt.Sprintf(`%s LOC`, formatNumber(rel.loc)))
+					fmt.Fprintf(&sb, `%s LOC`, formatNumber(rel.loc))
 				}
 				sb.WriteString(`</div>`)
 			}
 
 			sb.WriteString(`<div class="highlight-entries" style="font-size: 0.8125rem;">`)
 			for _, h := range rel.ranked.Release.Highlights {
-				sb.WriteString(fmt.Sprintf(`<div class="highlight-entry">★ %s</div>`, h.Description))
+				fmt.Fprintf(&sb, `<div class="highlight-entry">★ %s</div>`, h.Description)
 			}
 			maxAdded := 2
 			for j, a := range rel.ranked.Release.Added {
 				if j >= maxAdded {
 					remaining := len(rel.ranked.Release.Added) - maxAdded
 					if remaining > 0 {
-						sb.WriteString(fmt.Sprintf(`<div class="highlight-entry" style="color: var(--text-muted);">+ %d more...</div>`, remaining))
+						fmt.Fprintf(&sb, `<div class="highlight-entry" style="color: var(--text-muted);">+ %d more...</div>`, remaining)
 					}
 					break
 				}
-				sb.WriteString(fmt.Sprintf(`<div class="highlight-entry">+ %s</div>`, a.Description))
+				fmt.Fprintf(&sb, `<div class="highlight-entry">+ %s</div>`, a.Description)
 			}
 			sb.WriteString(`</div>`)
 			sb.WriteString(`</div>`)
@@ -651,7 +659,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					if i > 0 {
 						sb.WriteString(",")
 					}
-					sb.WriteString(fmt.Sprintf(`'%s'`, c))
+					fmt.Fprintf(&sb, `'%s'`, c)
 				}
 				sb.WriteString(`];
 
@@ -660,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					if i > 0 {
 						sb.WriteString(",")
 					}
-					sb.WriteString(fmt.Sprintf(`{value: %d, name: '%s'}`, m.tokens, m.name))
+					fmt.Fprintf(&sb, `{value: %d, name: '%s'}`, m.tokens, m.name)
 				}
 				sb.WriteString(`];
 
@@ -669,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					if i > 0 {
 						sb.WriteString(",")
 					}
-					sb.WriteString(fmt.Sprintf(`{value: %.2f, name: '%s'}`, m.cost, m.name))
+					fmt.Fprintf(&sb, `{value: %.2f, name: '%s'}`, m.cost, m.name)
 				}
 				sb.WriteString(`];
 
@@ -781,8 +789,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				sb.WriteString(`<defs>`)
 				for i, m := range models {
 					color := colors[i%len(colors)]
-					sb.WriteString(fmt.Sprintf(`<linearGradient id="grad-tok-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`,
-						i, color, color))
+					fmt.Fprintf(&sb, `<linearGradient id="grad-tok-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`,
+						i, color, color)
+
 					_ = m
 				}
 				sb.WriteString(`</defs>`)
@@ -795,20 +804,23 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					strokeDash := displayPct / 100 * circumference
 					strokeOffset := -offset / 100 * circumference
-					sb.WriteString(fmt.Sprintf(`<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-tok-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
-						radius, i, strokeWidth, strokeDash, circumference, strokeOffset))
+					fmt.Fprintf(&sb, `<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-tok-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
+						radius, i, strokeWidth, strokeDash, circumference, strokeOffset)
+
 					offset += pct
 				}
 				sb.WriteString(`</svg>`)
-				sb.WriteString(fmt.Sprintf(`<div class="donut-center"><div class="donut-center-value">%s</div><div class="donut-center-label">tokens</div></div>`,
-					formatNumber(int(totalTokens))))
+				fmt.Fprintf(&sb, `<div class="donut-center"><div class="donut-center-value">%s</div><div class="donut-center-label">tokens</div></div>`,
+					formatNumber(int(totalTokens)))
+
 				sb.WriteString(`</div>`)
 				sb.WriteString(`<div class="donut-legend">`)
 				for i, m := range models {
 					pct := float64(m.tokens) / float64(totalTokens) * 100
 					color := colors[i%len(colors)]
-					sb.WriteString(fmt.Sprintf(`<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
-						color, m.name, pct))
+					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
+						color, m.name, pct)
+
 				}
 				sb.WriteString(`</div>`)
 				sb.WriteString(`</div>`)
@@ -821,8 +833,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				sb.WriteString(`<defs>`)
 				for i, m := range models {
 					color := colors[i%len(colors)]
-					sb.WriteString(fmt.Sprintf(`<linearGradient id="grad-cost-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`,
-						i, color, color))
+					fmt.Fprintf(&sb, `<linearGradient id="grad-cost-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`,
+						i, color, color)
+
 					_ = m
 				}
 				sb.WriteString(`</defs>`)
@@ -835,20 +848,23 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					strokeDash := displayPct / 100 * circumference
 					strokeOffset := -offset / 100 * circumference
-					sb.WriteString(fmt.Sprintf(`<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cost-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
-						radius, i, strokeWidth, strokeDash, circumference, strokeOffset))
+					fmt.Fprintf(&sb, `<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cost-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
+						radius, i, strokeWidth, strokeDash, circumference, strokeOffset)
+
 					offset += pct
 				}
 				sb.WriteString(`</svg>`)
-				sb.WriteString(fmt.Sprintf(`<div class="donut-center"><div class="donut-center-value">$%.0f</div><div class="donut-center-label">total</div></div>`,
-					totalCost))
+				fmt.Fprintf(&sb, `<div class="donut-center"><div class="donut-center-value">$%.0f</div><div class="donut-center-label">total</div></div>`,
+					totalCost)
+
 				sb.WriteString(`</div>`)
 				sb.WriteString(`<div class="donut-legend">`)
 				for i, m := range models {
 					pct := m.cost / totalCost * 100
 					color := colors[i%len(colors)]
-					sb.WriteString(fmt.Sprintf(`<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
-						color, m.name, pct))
+					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
+						color, m.name, pct)
+
 				}
 				sb.WriteString(`</div>`)
 				sb.WriteString(`</div>`)
@@ -892,10 +908,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var catColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
   var catLabels = ['Input', 'Output', 'Cache Read', 'Cache Write'];
 `)
-				sb.WriteString(fmt.Sprintf(`  var catTokens = [%d, %d, %d, %d];
-`, catInput, catOutput, catCacheRead, catCacheWrite))
-				sb.WriteString(fmt.Sprintf(`  var catCosts = [%.2f, %.2f, %.2f, %.2f];
-`, costInput, costOutput, costCacheRead, costCacheWrite))
+				fmt.Fprintf(&sb, `  var catTokens = [%d, %d, %d, %d];
+`, catInput, catOutput, catCacheRead, catCacheWrite)
+
+				fmt.Fprintf(&sb, `  var catCosts = [%.2f, %.2f, %.2f, %.2f];
+`, costInput, costOutput, costCacheRead, costCacheWrite)
+
 				sb.WriteString(`
   var catTokensData = catLabels.map(function(l, i) { return {value: catTokens[i], name: l}; });
   var catCostsData = catLabels.map(function(l, i) { return {value: catCosts[i], name: l}; });
@@ -917,22 +935,24 @@ document.addEventListener('DOMContentLoaded', function() {
   var catTokensOpt = JSON.parse(JSON.stringify(catBaseOption));
   catTokensOpt.series[0].data = catTokensData;
 `)
-				sb.WriteString(fmt.Sprintf(`  catTokensOpt.graphic = [{ type: 'group', left: 'center', top: '38%%', children: [
+				fmt.Fprintf(&sb, `  catTokensOpt.graphic = [{ type: 'group', left: 'center', top: '38%%', children: [
     { type: 'text', style: { text: '%s', fontSize: 22, fontWeight: 'bold', fill: getComputedStyle(document.body).getPropertyValue('--text').trim(), textAlign: 'center' }, left: 'center', top: 0 },
     { type: 'text', style: { text: 'tokens', fontSize: 11, fill: getComputedStyle(document.body).getPropertyValue('--text-muted').trim(), textAlign: 'center' }, left: 'center', top: 26 }
   ]}];
-`, formatNumber(int(catTotalTokens))))
+`, formatNumber(int(catTotalTokens)))
+
 				sb.WriteString(`  catTokensChart.setOption(catTokensOpt);
 
   var catCostChart = echarts.init(document.getElementById('cat-cost-chart'));
   var catCostOpt = JSON.parse(JSON.stringify(catBaseOption));
   catCostOpt.series[0].data = catCostsData;
 `)
-				sb.WriteString(fmt.Sprintf(`  catCostOpt.graphic = [{ type: 'group', left: 'center', top: '38%%', children: [
+				fmt.Fprintf(&sb, `  catCostOpt.graphic = [{ type: 'group', left: 'center', top: '38%%', children: [
     { type: 'text', style: { text: '$%.0f', fontSize: 22, fontWeight: 'bold', fill: getComputedStyle(document.body).getPropertyValue('--text').trim(), textAlign: 'center' }, left: 'center', top: 0 },
     { type: 'text', style: { text: 'total', fontSize: 11, fill: getComputedStyle(document.body).getPropertyValue('--text-muted').trim(), textAlign: 'center' }, left: 'center', top: 26 }
   ]}];
-`, catTotalCost))
+`, catTotalCost)
+
 				sb.WriteString(`  catCostChart.setOption(catCostOpt);
 
   window.addEventListener('resize', function() { catTokensChart.resize(); catCostChart.resize(); });
@@ -952,7 +972,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				sb.WriteString(`<div class="donut-chart"><h4>Tokens by Category</h4><div class="donut-container">`)
 				sb.WriteString(`<svg class="donut-svg" width="200" height="200" viewBox="0 0 200 200"><defs>`)
 				for i, c := range catColors {
-					sb.WriteString(fmt.Sprintf(`<linearGradient id="grad-cat-tok-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`, i, c, c))
+					fmt.Fprintf(&sb, `<linearGradient id="grad-cat-tok-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`, i, c, c)
 				}
 				sb.WriteString(`</defs>`)
 				offset := 0.0
@@ -967,16 +987,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					strokeDash := displayPct / 100 * circumference
 					strokeOffset := -offset / 100 * circumference
-					sb.WriteString(fmt.Sprintf(`<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cat-tok-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
-						radius, i, strokeWidth, strokeDash, circumference, strokeOffset))
+					fmt.Fprintf(&sb, `<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cat-tok-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
+						radius, i, strokeWidth, strokeDash, circumference, strokeOffset)
+
 					offset += pct
 				}
 				sb.WriteString(`</svg>`)
-				sb.WriteString(fmt.Sprintf(`<div class="donut-center"><div class="donut-center-value">%s</div><div class="donut-center-label">tokens</div></div>`, formatNumber(int(catTotalTokens))))
+				fmt.Fprintf(&sb, `<div class="donut-center"><div class="donut-center-value">%s</div><div class="donut-center-label">tokens</div></div>`, formatNumber(int(catTotalTokens)))
 				sb.WriteString(`</div><div class="donut-legend">`)
 				for i, tok := range catTokens {
 					pct := float64(tok) / float64(catTotalTokens) * 100
-					sb.WriteString(fmt.Sprintf(`<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`, catColors[i], catLabels[i], pct))
+					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`, catColors[i], catLabels[i], pct)
 				}
 				sb.WriteString(`</div></div>`)
 
@@ -984,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				sb.WriteString(`<div class="donut-chart"><h4>Cost by Category</h4><div class="donut-container">`)
 				sb.WriteString(`<svg class="donut-svg" width="200" height="200" viewBox="0 0 200 200"><defs>`)
 				for i, c := range catColors {
-					sb.WriteString(fmt.Sprintf(`<linearGradient id="grad-cat-cost-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`, i, c, c))
+					fmt.Fprintf(&sb, `<linearGradient id="grad-cat-cost-%d" x1="0%%" y1="0%%" x2="100%%" y2="100%%"><stop offset="0%%" style="stop-color:%s;stop-opacity:1"/><stop offset="100%%" style="stop-color:%s;stop-opacity:0.7"/></linearGradient>`, i, c, c)
 				}
 				sb.WriteString(`</defs>`)
 				offset = 0.0
@@ -999,16 +1020,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					strokeDash := displayPct / 100 * circumference
 					strokeOffset := -offset / 100 * circumference
-					sb.WriteString(fmt.Sprintf(`<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cat-cost-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
-						radius, i, strokeWidth, strokeDash, circumference, strokeOffset))
+					fmt.Fprintf(&sb, `<circle class="donut-segment" cx="100" cy="100" r="%.0f" fill="none" stroke="url(#grad-cat-cost-%d)" stroke-width="%.0f" stroke-linecap="round" stroke-dasharray="%.2f %.2f" stroke-dashoffset="%.2f"/>`,
+						radius, i, strokeWidth, strokeDash, circumference, strokeOffset)
+
 					offset += pct
 				}
 				sb.WriteString(`</svg>`)
-				sb.WriteString(fmt.Sprintf(`<div class="donut-center"><div class="donut-center-value">$%.0f</div><div class="donut-center-label">total</div></div>`, catTotalCost))
+				fmt.Fprintf(&sb, `<div class="donut-center"><div class="donut-center-value">$%.0f</div><div class="donut-center-label">total</div></div>`, catTotalCost)
 				sb.WriteString(`</div><div class="donut-legend">`)
 				for i, cost := range catCosts {
 					pct := cost / catTotalCost * 100
-					sb.WriteString(fmt.Sprintf(`<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`, catColors[i], catLabels[i], pct))
+					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`, catColors[i], catLabels[i], pct)
 				}
 				sb.WriteString(`</div></div>`)
 
@@ -1017,21 +1039,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			// Summary metrics rows
 			sb.WriteString(`<div class="grid" style="margin-top: 1.5rem;">`)
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Input Tokens</div><div class="card-value">%s</div></div>`,
-				formatNumber(int(r.TokenSpend.TotalInputTokens))))
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Output Tokens</div><div class="card-value">%s</div></div>`,
-				formatNumber(int(r.TokenSpend.TotalOutputTokens))))
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Total Cost</div><div class="card-value">$%.2f</div></div>`,
-				r.TokenSpend.TotalCostUSD))
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Input Tokens</div><div class="card-value">%s</div></div>`,
+				formatNumber(int(r.TokenSpend.TotalInputTokens)))
+
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Output Tokens</div><div class="card-value">%s</div></div>`,
+				formatNumber(int(r.TokenSpend.TotalOutputTokens)))
+
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Total Cost</div><div class="card-value">$%.2f</div></div>`,
+				r.TokenSpend.TotalCostUSD)
+
 			sb.WriteString(`</div>`)
 			sb.WriteString(`<div class="grid" style="margin-top: 0.75rem;">`)
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Cache Write Tokens</div><div class="card-value">%s</div></div>`,
-				formatNumber(int(r.TokenSpend.TotalCacheCreation))))
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Cache Read Tokens</div><div class="card-value">%s</div></div>`,
-				formatNumber(int(r.TokenSpend.TotalCacheRead))))
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Cache Write Tokens</div><div class="card-value">%s</div></div>`,
+				formatNumber(int(r.TokenSpend.TotalCacheCreation)))
+
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Cache Read Tokens</div><div class="card-value">%s</div></div>`,
+				formatNumber(int(r.TokenSpend.TotalCacheRead)))
+
 			totalAllTokens := r.TokenSpend.TotalInputTokens + r.TokenSpend.TotalOutputTokens + r.TokenSpend.TotalCacheRead + r.TokenSpend.TotalCacheCreation
-			sb.WriteString(fmt.Sprintf(`<div class="card"><div class="card-title">Total Tokens</div><div class="card-value">%s</div></div>`,
-				formatNumber(int(totalAllTokens))))
+			fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Total Tokens</div><div class="card-value">%s</div></div>`,
+				formatNumber(int(totalAllTokens)))
+
 			sb.WriteString(`</div>`)
 
 			// Stacked bar charts - Tokens and Cost by model
@@ -1070,32 +1098,30 @@ document.addEventListener('DOMContentLoaded', function() {
 				barHeightPx := totalTok / maxTokens * chartHeight
 
 				sb.WriteString(`<div class="stacked-bar" style="position: relative;">`)
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-inner" style="height: %.0fpx;">`, barHeightPx))
+				fmt.Fprintf(&sb, `<div class="stacked-bar-inner" style="height: %.0fpx;">`, barHeightPx)
 				for i, seg := range segments {
 					if seg == 0 {
 						continue
 					}
 					segPct := float64(seg) / totalTok * 100
 					tooltip := fmt.Sprintf("%s: %s", labels[i], formatWithCommas(seg/1000)+"K")
-					sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
-						segPct, segmentColors[i], tooltip))
+					fmt.Fprintf(&sb, `<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
+						segPct, segmentColors[i], tooltip)
+
 				}
 				sb.WriteString(`</div>`)
 				// Model label - show short name
-				shortName := m.name
-				if strings.HasPrefix(shortName, "claude-") {
-					shortName = strings.TrimPrefix(shortName, "claude-")
-				}
+				shortName := strings.TrimPrefix(m.name, "claude-")
 				if len(shortName) > 12 {
 					shortName = shortName[:12]
 				}
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-label">%s</div>`, shortName))
+				fmt.Fprintf(&sb, `<div class="stacked-bar-label">%s</div>`, shortName)
 				sb.WriteString(`</div>`)
 			}
 			sb.WriteString(`</div>`)
 			sb.WriteString(`<div class="stacked-legend">`)
 			for i, label := range []string{"Input", "Output", "Cache Read", "Cache Write"} {
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-legend-item"><span class="stacked-legend-color" style="background: %s;"></span>%s</div>`, segmentColors[i], label))
+				fmt.Fprintf(&sb, `<div class="stacked-legend-item"><span class="stacked-legend-color" style="background: %s;"></span>%s</div>`, segmentColors[i], label)
 			}
 			sb.WriteString(`</div>`)
 			sb.WriteString(`</div>`)
@@ -1118,31 +1144,29 @@ document.addEventListener('DOMContentLoaded', function() {
 				barHeightPx := totalCostModel / maxCost * chartHeight
 
 				sb.WriteString(`<div class="stacked-bar" style="position: relative;">`)
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-inner" style="height: %.0fpx;">`, barHeightPx))
+				fmt.Fprintf(&sb, `<div class="stacked-bar-inner" style="height: %.0fpx;">`, barHeightPx)
 				for i, cost := range costs {
 					if cost < 0.01 {
 						continue
 					}
 					segPct := cost / totalCostModel * 100
 					tooltip := fmt.Sprintf("%s: $%.2f", labels[i], cost)
-					sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
-						segPct, segmentColors[i], tooltip))
+					fmt.Fprintf(&sb, `<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
+						segPct, segmentColors[i], tooltip)
+
 				}
 				sb.WriteString(`</div>`)
-				shortName := m.name
-				if strings.HasPrefix(shortName, "claude-") {
-					shortName = strings.TrimPrefix(shortName, "claude-")
-				}
+				shortName := strings.TrimPrefix(m.name, "claude-")
 				if len(shortName) > 12 {
 					shortName = shortName[:12]
 				}
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-bar-label">%s</div>`, shortName))
+				fmt.Fprintf(&sb, `<div class="stacked-bar-label">%s</div>`, shortName)
 				sb.WriteString(`</div>`)
 			}
 			sb.WriteString(`</div>`)
 			sb.WriteString(`<div class="stacked-legend">`)
 			for i, label := range []string{"Input", "Output", "Cache Read", "Cache Write"} {
-				sb.WriteString(fmt.Sprintf(`<div class="stacked-legend-item"><span class="stacked-legend-color" style="background: %s;"></span>%s</div>`, segmentColors[i], label))
+				fmt.Fprintf(&sb, `<div class="stacked-legend-item"><span class="stacked-legend-color" style="background: %s;"></span>%s</div>`, segmentColors[i], label)
 			}
 			sb.WriteString(`</div>`)
 			sb.WriteString(`</div>`)
@@ -1170,7 +1194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				mt := r.TokenSpend.ByModel[m.name]
 				tokenPct := float64(m.tokens) / float64(totalTokens) * 100
 				costPct := m.cost / totalCost * 100
-				sb.WriteString(fmt.Sprintf(`<tr>
+				fmt.Fprintf(&sb, `<tr>
 					<td class="model">%s</td>
 					<td class="num">%s</td>
 					<td class="num">%s</td>
@@ -1187,7 +1211,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					formatTokensK(mt.CacheCreationTokens),
 					tokenPct,
 					m.cost,
-					costPct))
+					costPct)
+
 			}
 			sb.WriteString(`</tbody>`)
 			sb.WriteString(`</table>`)
@@ -1200,9 +1225,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			// Pricing reference table - show only models used in this report
 			sb.WriteString(`<div class="card" style="margin-top: 1.5rem;">`)
-			sb.WriteString(fmt.Sprintf(`<h3>Pricing Reference <span style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">(v%s)</span></h3>`, report.PricingVersion()))
+			fmt.Fprintf(&sb, `<h3>Pricing Reference <span style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">(v%s)</span></h3>`, report.PricingVersion())
 			sb.WriteString(`<p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">`)
-			sb.WriteString(fmt.Sprintf(`Source: <a href="%s" style="color: var(--accent);">%s</a>`, report.PricingSource(), report.PricingSource()))
+			fmt.Fprintf(&sb, `Source: <a href="%s" style="color: var(--accent);">%s</a>`, report.PricingSource(), report.PricingSource())
 			sb.WriteString(`</p>`)
 			sb.WriteString(`<div style="overflow-x: auto;">`)
 			sb.WriteString(`<table class="model-table">`)
@@ -1219,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if !ok {
 					continue
 				}
-				sb.WriteString(fmt.Sprintf(`<tr>
+				fmt.Fprintf(&sb, `<tr>
 					<td class="model">%s</td>
 					<td class="num">$%.2f</td>
 					<td class="num">$%.2f</td>
@@ -1230,7 +1255,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					pricing.InputPerMillion,
 					pricing.OutputPerMillion,
 					pricing.CacheReadPerMillion,
-					pricing.CacheCreationPerMillion))
+					pricing.CacheCreationPerMillion)
+
 			}
 			sb.WriteString(`</tbody>`)
 			sb.WriteString(`</table>`)
@@ -1240,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	// Footer
-	sb.WriteString(fmt.Sprintf(`<footer>Generated %s by devfolio</footer>`, r.Generated.Format("Jan 2, 2006 15:04 MST")))
+	fmt.Fprintf(&sb, `<footer>Generated %s by devfolio</footer>`, r.Generated.Format("Jan 2, 2006 15:04 MST"))
 
 	// CSV download script (only if we have token data)
 	if r.TokenSpend != nil && len(r.TokenSpend.ByModel) > 0 {
@@ -1282,10 +1308,11 @@ function downloadModelCSV() {
 		})
 
 		for _, m := range csvModels {
-			sb.WriteString(fmt.Sprintf(`  csv.push('%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f');
+			fmt.Fprintf(&sb, `  csv.push('%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f');
 `,
 				m.name, m.input, m.output, m.cacheRead, m.cacheWrite, m.cost,
-				m.inputPrice, m.outputPrice, m.cacheReadPrice, m.cacheWritePrice))
+				m.inputPrice, m.outputPrice, m.cacheReadPrice, m.cacheWritePrice)
+
 		}
 
 		sb.WriteString(`
