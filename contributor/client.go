@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v88/github"
-	"github.com/grokify/gogithub/auth"
+	"github.com/grokify/gogithub"
+	"github.com/grokify/gogithub/clientv1"
 )
 
 // coAuthorRegex matches Co-authored-by trailers in commit messages.
@@ -21,7 +21,7 @@ var coAuthorRegex = regexp.MustCompile(`(?i)co-authored-by:\s*(.+?)\s*<([^>]+)>`
 
 // Client provides contributor profile generation functionality.
 type Client struct {
-	gh *github.Client
+	gh clientv1.Client
 }
 
 // NewClient creates a new contributor client.
@@ -30,7 +30,7 @@ func NewClient(token string) (*Client, error) {
 		return nil, fmt.Errorf("GitHub token is required")
 	}
 
-	client, err := auth.NewGitHubClient(context.Background(), token)
+	client, err := clientv1.NewClient(context.Background(), token)
 	if err != nil {
 		return nil, fmt.Errorf("creating GitHub client: %w", err)
 	}
@@ -57,7 +57,7 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 	// Stage 1: Get user info
 	reportProgress(opts, stageFetchUser, 0, 0, "Fetching user info", false)
 
-	user, _, err := c.gh.Users.Get(ctx, opts.Username)
+	user, err := c.gh.GetUser(ctx, opts.Username)
 	if err != nil {
 		return nil, fmt.Errorf("fetching user: %w", err)
 	}
@@ -66,12 +66,12 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 
 	profile := &Profile{
 		Username:    opts.Username,
-		Name:        user.GetName(),
-		AvatarURL:   user.GetAvatarURL(),
-		Bio:         user.GetBio(),
-		Company:     user.GetCompany(),
-		Location:    user.GetLocation(),
-		Blog:        user.GetBlog(),
+		Name:        user.Name,
+		AvatarURL:   user.AvatarURL,
+		Bio:         user.Bio,
+		Company:     user.Company,
+		Location:    user.Location,
+		Blog:        user.Blog,
 		Languages:   make(map[string]int),
 		AIStats: AICollabStats{
 			ByTool: make(map[string]AIToolStat),
@@ -109,7 +109,7 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 	// Stage 3: Get contribution data for each repo
 	totalRepos := len(repos)
 	for i, repo := range repos {
-		repoName := repo.GetFullName()
+		repoName := repo.FullName
 		reportProgress(opts, stageProcessRepo, i+1, totalRepos, repoName, false)
 
 		// Check for local repo first (unless API-only mode)
@@ -118,7 +118,7 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 		var localErr error
 
 		if !opts.APIOnly {
-			localPath := findLocalRepo(opts.LocalPaths, repo.GetOwner().GetLogin(), repo.GetName())
+			localPath := findLocalRepo(opts.LocalPaths, repoOwnerLogin(repo), repo.Name)
 			if localPath != "" {
 				contrib, aiData, localErr = c.getLocalRepoContributions(ctx, opts.Username, repo, localPath, opts)
 			}
@@ -232,6 +232,14 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 	return profile, nil
 }
 
+// repoOwnerLogin safely returns a repository's owner login, or "" if unset.
+func repoOwnerLogin(repo *gogithub.Repository) string {
+	if repo == nil || repo.Owner == nil {
+		return ""
+	}
+	return repo.Owner.Login
+}
+
 // findLocalRepo searches for a local clone of the repository.
 func findLocalRepo(searchPaths []string, owner, name string) string {
 	// Default search paths if none provided
@@ -270,17 +278,17 @@ func isGitRepo(path string) bool {
 }
 
 // getLocalRepoContributions gets contribution data from a local git repository.
-func (c *Client) getLocalRepoContributions(ctx context.Context, username string, repo *github.Repository, localPath string, opts ProfileOptions) (RepoContrib, map[string]aiToolData, error) {
-	owner := repo.GetOwner().GetLogin()
-	name := repo.GetName()
+func (c *Client) getLocalRepoContributions(ctx context.Context, username string, repo *gogithub.Repository, localPath string, opts ProfileOptions) (RepoContrib, map[string]aiToolData, error) {
+	owner := repoOwnerLogin(repo)
+	name := repo.Name
 
 	contrib := RepoContrib{
 		Owner:       owner,
 		Name:        name,
-		Description: repo.GetDescription(),
-		URL:         repo.GetHTMLURL(),
-		Language:    repo.GetLanguage(),
-		Stars:       repo.GetStargazersCount(),
+		Description: repo.Description,
+		URL:         repo.HTMLURL,
+		Language:    repo.Language,
+		Stars:       repo.StargazersCount,
 		IsOwner:     owner == username,
 	}
 
@@ -364,61 +372,31 @@ func (c *Client) getLocalRepoContributions(ctx context.Context, username string,
 	}
 
 	// Still need API for PRs/Issues (not in local git)
-	prOpts := &github.PullRequestListOptions{
-		State:       "all",
-		ListOptions: github.ListOptions{PerPage: 100},
-	}
-
-	for {
-		prs, resp, err := c.gh.PullRequests.List(ctx, owner, name, prOpts)
-		if err != nil {
-			break
-		}
-
+	prs, err := c.gh.ListPullRequests(ctx, owner, name, &clientv1.ListPullRequestsOptions{State: "all"})
+	if err == nil {
 		for _, pr := range prs {
-			if pr.GetUser().GetLogin() == username {
-				createdAt := pr.GetCreatedAt().Time
-				if !opts.Since.IsZero() && createdAt.Before(opts.Since) {
+			if pr.User != nil && pr.User.Login == username {
+				if !opts.Since.IsZero() && pr.CreatedAt.Before(opts.Since) {
 					continue
 				}
-				if !opts.Until.IsZero() && createdAt.After(opts.Until) {
+				if !opts.Until.IsZero() && pr.CreatedAt.After(opts.Until) {
 					continue
 				}
 				contrib.PRs++
-				if pr.GetMerged() {
+				if pr.Merged {
 					contrib.PRsMerged++
 				}
 			}
 		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		prOpts.Page = resp.NextPage
 	}
 
 	return contrib, aiData, nil
 }
 
-func (c *Client) getUserRepos(ctx context.Context, opts ProfileOptions) ([]*github.Repository, error) {
-	var allRepos []*github.Repository
-
-	// Get user's own repos
-	listOpts := &github.RepositoryListByUserOptions{
-		Type:        "all",
-		ListOptions: github.ListOptions{PerPage: 100},
-	}
-
-	for {
-		repos, resp, err := c.gh.Repositories.ListByUser(ctx, opts.Username, listOpts)
-		if err != nil {
-			return nil, err
-		}
-		allRepos = append(allRepos, repos...)
-		if resp.NextPage == 0 {
-			break
-		}
-		listOpts.Page = resp.NextPage
+func (c *Client) getUserRepos(ctx context.Context, opts ProfileOptions) ([]*gogithub.Repository, error) {
+	allRepos, err := c.gh.ListUserRepos(ctx, opts.Username)
+	if err != nil {
+		return nil, err
 	}
 
 	// Filter by orgs if specified
@@ -428,9 +406,9 @@ func (c *Client) getUserRepos(ctx context.Context, opts ProfileOptions) ([]*gith
 			orgSet[org] = true
 		}
 
-		filtered := make([]*github.Repository, 0)
+		filtered := make([]*gogithub.Repository, 0)
 		for _, repo := range allRepos {
-			if orgSet[repo.GetOwner().GetLogin()] {
+			if orgSet[repoOwnerLogin(repo)] {
 				filtered = append(filtered, repo)
 			}
 		}
@@ -446,52 +424,44 @@ type aiToolData struct {
 	byDate map[string]int
 }
 
-func (c *Client) getRepoContributions(ctx context.Context, username string, repo *github.Repository, opts ProfileOptions) (RepoContrib, map[string]aiToolData, error) {
-	owner := repo.GetOwner().GetLogin()
-	name := repo.GetName()
+func (c *Client) getRepoContributions(ctx context.Context, username string, repo *gogithub.Repository, opts ProfileOptions) (RepoContrib, map[string]aiToolData, error) {
+	owner := repoOwnerLogin(repo)
+	name := repo.Name
 
 	contrib := RepoContrib{
 		Owner:       owner,
 		Name:        name,
-		Description: repo.GetDescription(),
-		URL:         repo.GetHTMLURL(),
-		Language:    repo.GetLanguage(),
-		Stars:       repo.GetStargazersCount(),
+		Description: repo.Description,
+		URL:         repo.HTMLURL,
+		Language:    repo.Language,
+		Stars:       repo.StargazersCount,
 		IsOwner:     owner == username,
 	}
 
 	aiData := make(map[string]aiToolData)
 
 	// Count commits by user
-	commitOpts := &github.CommitsListOptions{
-		Author:      username,
-		ListOptions: github.ListOptions{PerPage: 100},
-	}
-
+	commitOpts := &clientv1.ListCommitsOptions{Author: username}
 	if !opts.Since.IsZero() {
-		commitOpts.Since = opts.Since
+		commitOpts.Since = &opts.Since
 	}
 	if !opts.Until.IsZero() {
-		commitOpts.Until = opts.Until
+		commitOpts.Until = &opts.Until
 	}
 
-	for {
-		commits, resp, err := c.gh.Repositories.ListCommits(ctx, owner, name, commitOpts)
-		if err != nil {
-			break // May not have access
-		}
+	commits, err := c.gh.ListCommits(ctx, owner, name, commitOpts)
+	if err == nil {
 		contrib.Commits += len(commits)
 
 		// Check each commit for AI co-authors
 		for _, commit := range commits {
 			commitDate := ""
-			if commit.GetCommit().GetAuthor().GetDate() != (github.Timestamp{}) {
-				commitDate = commit.GetCommit().GetAuthor().GetDate().Format("2006-01-02")
+			if commit.Author != nil && !commit.Author.Date.IsZero() {
+				commitDate = commit.Author.Date.Format("2006-01-02")
 			}
 
 			// Extract co-authors from commit message
-			message := commit.GetCommit().GetMessage()
-			matches := coAuthorRegex.FindAllStringSubmatch(message, -1)
+			matches := coAuthorRegex.FindAllStringSubmatch(commit.Message, -1)
 
 			for _, match := range matches {
 				if len(match) >= 3 {
@@ -519,45 +489,25 @@ func (c *Client) getRepoContributions(ctx context.Context, username string, repo
 				}
 			}
 		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		commitOpts.Page = resp.NextPage
 	}
 
 	// Count PRs by user
-	prOpts := &github.PullRequestListOptions{
-		State:       "all",
-		ListOptions: github.ListOptions{PerPage: 100},
-	}
-
-	for {
-		prs, resp, err := c.gh.PullRequests.List(ctx, owner, name, prOpts)
-		if err != nil {
-			break
-		}
-
+	prs, err := c.gh.ListPullRequests(ctx, owner, name, &clientv1.ListPullRequestsOptions{State: "all"})
+	if err == nil {
 		for _, pr := range prs {
-			if pr.GetUser().GetLogin() == username {
-				createdAt := pr.GetCreatedAt().Time
-				if !opts.Since.IsZero() && createdAt.Before(opts.Since) {
+			if pr.User != nil && pr.User.Login == username {
+				if !opts.Since.IsZero() && pr.CreatedAt.Before(opts.Since) {
 					continue
 				}
-				if !opts.Until.IsZero() && createdAt.After(opts.Until) {
+				if !opts.Until.IsZero() && pr.CreatedAt.After(opts.Until) {
 					continue
 				}
 				contrib.PRs++
-				if pr.GetMerged() {
+				if pr.Merged {
 					contrib.PRsMerged++
 				}
 			}
 		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		prOpts.Page = resp.NextPage
 	}
 
 	return contrib, aiData, nil
@@ -568,32 +518,21 @@ func (c *Client) getActivityHeatmap(ctx context.Context, opts ProfileOptions) ([
 	// but for now we'll aggregate from events
 	activityMap := make(map[string]int)
 
-	// Get user events
-	eventOpts := &github.ListOptions{PerPage: 100}
+	events, err := c.gh.ListUserEvents(ctx, opts.Username, &clientv1.ListUserEventsOptions{PublicOnly: false})
+	if err != nil {
+		return nil, err
+	}
 
-	for page := 0; page < 10; page++ { // Limit to avoid rate limiting
-		events, resp, err := c.gh.Activity.ListEventsPerformedByUser(ctx, opts.Username, false, eventOpts)
-		if err != nil {
-			break
+	for _, event := range events {
+		if !opts.Since.IsZero() && event.CreatedAt.Before(opts.Since) {
+			continue
+		}
+		if !opts.Until.IsZero() && event.CreatedAt.After(opts.Until) {
+			continue
 		}
 
-		for _, event := range events {
-			createdAt := event.GetCreatedAt().Time
-			if !opts.Since.IsZero() && createdAt.Before(opts.Since) {
-				continue
-			}
-			if !opts.Until.IsZero() && createdAt.After(opts.Until) {
-				continue
-			}
-
-			date := createdAt.Format("2006-01-02")
-			activityMap[date]++
-		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		eventOpts.Page = resp.NextPage
+		date := event.CreatedAt.Format("2006-01-02")
+		activityMap[date]++
 	}
 
 	// Convert to slice
