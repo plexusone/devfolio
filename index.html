@@ -403,6 +403,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quarterly-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Report
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -625,6 +636,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="commands/quarterly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quarterly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -712,6 +751,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -880,6 +947,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#quarterly-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Report
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -968,7 +1046,7 @@
 <li>💼 <strong>Recruiting (job seeking)</strong> — showcase your development portfolio</li>
 </ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Contributor Profile</label><label for="__tabbed_1_2">Team Velocity</label><label for="__tabbed_1_3">DevX Dashboard</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Contributor Profile</label><label for="__tabbed_1_2">Team Velocity</label><label for="__tabbed_1_3">DevX Dashboard</label><label for="__tabbed_1_4">Quarterly Report</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>your_token
@@ -990,6 +1068,15 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>-o<span class="w"> </span>dashboard.json
 </code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>devfolio<span class="w"> </span>quarterly<span class="w"> </span>report<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--username<span class="w"> </span>grokify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--since<span class="w"> </span><span class="m">2026</span>-04-01<span class="w"> </span>--until<span class="w"> </span><span class="m">2026</span>-06-30<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--repos<span class="w"> </span>~/go/src/github.com/grokify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--events<span class="w"> </span>~/.plexusone/omnidevx/data/events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--output<span class="w"> </span>Q2-2026.html
+</code></pre></div>
+</div>
 </div>
 </div>
 <p>See <a href="commands/contributor/">Commands</a> for the full flag reference on each.</p>
@@ -1001,7 +1088,7 @@
 <li>Daily activity data for heatmap visualization</li>
 <li>Aggregate statistics (commits, PRs, issues, reviews)</li>
 <li>AI collaboration tracking — detects <code>Co-Authored-By:</code> trailers from Claude Code, GitHub Copilot, Gemini CLI, Cursor, and Aider</li>
-<li>Optional <a href="https://github.com/plexusone/dashforge">dashforge</a>-compatible dashboard export (<code>--dashboard</code>)</li>
+<li>Optional <a href="https://github.com/plexusone/uiforge">uiforge</a>-compatible dashboard export (<code>--dashboard</code>)</li>
 </ul>
 <h3 id="team-velocity">Team Velocity<a class="headerlink" href="#team-velocity" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1015,11 +1102,18 @@
 <ul>
 <li>Built from the <a href="https://github.com/plexusone/omnidevx-core">OmniDevX</a> local event store: Claude Code, Codex CLI, git, and GitHub activity in one canonical model</li>
 <li>Headline metric tiles (sessions, prompts, commits, AI-assisted %, tool calls, cost, coverage), daily activity/cost charts, and a source-coverage table</li>
-<li>Exports as a portable <a href="https://github.com/plexusone/dashforge">dashforge</a> dashboard JSON — open it in dashforge's static viewer, or serve it through <a href="https://github.com/ProductBuildersHQ/visionstudio">VisionStudio</a>'s DevX panel</li>
+<li>Exports as a portable <a href="https://github.com/plexusone/uiforge">uiforge</a> dashboard JSON — open it in uiforge's static viewer, or serve it through <a href="https://github.com/ProductBuildersHQ/visionstudio">VisionStudio</a>'s DevX panel</li>
 <li>DevFolio only reads and reports; it never collects events itself — that's <code>omnidevx-core</code>'s job</li>
 </ul>
+<h3 id="quarterly-report">Quarterly Report<a class="headerlink" href="#quarterly-report" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Joins GitHub stats, git commit analytics, changelog highlights, and (with <code>--events</code>) OmniDevX token spend into one report</li>
+<li>Self-contained HTML by default (inline SVG charts), or interactive ECharts via CDN with <code>--chart-engine echarts</code></li>
+<li><code>--format dashboard</code> exports the same data as a <a href="https://github.com/plexusone/uiforge">uiforge</a> Dashboard IR JSON; <code>--format json</code> exports the raw report data</li>
+<li>Project highlights are pulled automatically from any <code>CHANGELOG.md</code>/<code>CHANGELOG.json</code> found under <code>--repos</code></li>
+</ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>go<span class="w"> </span>install<span class="w"> </span>github.com/plexusone/devfolio/cmd/devfolio@latest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>go<span class="w"> </span>install<span class="w"> </span>github.com/plexusone/devfolio/cmd/devfolio@latest
 </code></pre></div>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1028,10 +1122,11 @@
 </ul>
 <h2 id="related-projects">Related Projects<a class="headerlink" href="#related-projects" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://github.com/plexusone/omnidevx-core">omnidevx-core</a> — canonical event model, local store, period-report aggregation</li>
-<li><a href="https://github.com/plexusone/dashforge">dashforge</a> — the dashboard-IR format <code>devx dashboard</code> exports to</li>
+<li><a href="https://github.com/plexusone/omnidevx-core">omnidevx-core</a> — canonical event model, local store, period-report aggregation, embedded pricing</li>
+<li><a href="https://github.com/plexusone/uiforge">uiforge</a> — the dashboard-IR format <code>devx dashboard</code> and <code>quarterly report --format dashboard</code> export to</li>
 <li><a href="https://github.com/grokify/structured-changelog">structured-changelog</a> — JSON changelog format and portfolio aggregation</li>
-<li><a href="https://github.com/grokify/gogithub">gogithub</a> — GitHub API utilities</li>
+<li><a href="https://github.com/grokify/gogit">gogit</a> — git history parsing, commit stats</li>
+<li><a href="https://github.com/grokify/gogithub">gogithub</a> — GitHub API utilities, profile stats</li>
 </ul>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>MIT</p>

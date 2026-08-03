@@ -561,6 +561,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quarterly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quarterly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -648,6 +676,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -863,7 +919,7 @@
 </tr>
 <tr>
 <td><code>--dashboard</code></td>
-<td>Output <a href="https://github.com/plexusone/dashforge">dashforge</a>-compatible dashboard JSON instead of the raw profile</td>
+<td>Output <a href="https://github.com/plexusone/uiforge">uiforge</a>-compatible dashboard JSON instead of the raw profile</td>
 </tr>
 </tbody>
 </table>
@@ -871,7 +927,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate profile for a user</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>devfolio<span class="w"> </span>contributor<span class="w"> </span>profile<span class="w"> </span>--user<span class="w"> </span>grokify<span class="w"> </span>-o<span class="w"> </span>profile.json
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate a dashforge-compatible dashboard</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate a uiforge-compatible dashboard</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>devfolio<span class="w"> </span>contributor<span class="w"> </span>profile<span class="w"> </span>--user<span class="w"> </span>grokify<span class="w"> </span>--dashboard<span class="w"> </span>-o<span class="w"> </span>dashboard.json
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Limit to specific organizations</span>
@@ -893,11 +949,11 @@ profile generation runs.</p>
 <div class="admonition note">
 <p class="admonition-title"><code>--dashboard</code> chart rendering</p>
 <p><code>--dashboard</code> uses an older chart-widget shape (<code>output/dashboard</code>
-package) that predates dashforge's current viewer format. Metric and
+package) that predates uiforge's current viewer format. Metric and
 table widgets render correctly; chart widgets (the language pie chart,
-AI-tools bar chart) do not currently render in dashforge's viewer. The
+AI-tools bar chart) do not currently render in uiforge's viewer. The
 <code>devx dashboard</code> command's export does not have this issue — it's built
-against dashforge's <code>dashboardir</code> package directly.</p>
+against uiforge's <code>dashboardir</code> package directly.</p>
 </div>
 <h2 id="profile-contents">Profile Contents<a class="headerlink" href="#profile-contents" title="Permanent link">&para;</a></h2>
 <table>

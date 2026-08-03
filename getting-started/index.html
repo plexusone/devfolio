@@ -437,6 +437,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-a-quarterly-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a quarterly report
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -583,6 +594,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/quarterly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quarterly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -670,6 +709,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -843,6 +910,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-a-quarterly-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a quarterly report
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -874,9 +952,11 @@
 </code></pre></div>
 <h2 id="authentication-contributor-profile-only">Authentication (contributor profile only)<a class="headerlink" href="#authentication-contributor-profile-only" title="Permanent link">&para;</a></h2>
 <p><code>devfolio contributor profile</code> requires a GitHub personal access token as
-<code>GITHUB_TOKEN</code>. <code>devfolio team velocity</code> and <code>devfolio devx dashboard</code> do
-not need one — team velocity reads a portfolio file, and devx dashboard
-reads the local OmniDevX event store.</p>
+<code>GITHUB_TOKEN</code>. The other commands don't call the GitHub API directly:
+<code>team velocity</code> reads a portfolio file, <code>devx dashboard</code> reads the local
+OmniDevX event store, and <code>quarterly report</code> reads a pre-generated GitHub
+stats file (produced separately via <code>gogithub profile stats</code>, which does
+need <code>GITHUB_TOKEN</code>) — see <a href="../commands/quarterly/">Quarterly Commands</a>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>your_token_here
 </code></pre></div>
 <h3 id="fine-grained-token-recommended">Fine-grained token (recommended)<a class="headerlink" href="#fine-grained-token-recommended" title="Permanent link">&para;</a></h3>
@@ -973,15 +1053,28 @@ GitHub data directly:</p>
 events that <a href="https://github.com/plexusone/omnidevx-core">omnidevx-core</a>'s
 providers already collected into the local store
 (<code>~/.plexusone/omnidevx/data/</code>), and it's the only command that produces a
-<a href="https://github.com/plexusone/dashforge">dashforge</a> dashboard by default
+<a href="https://github.com/plexusone/uiforge">uiforge</a> dashboard by default
 (contributor profile only does this with <code>--dashboard</code>):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w"> </span>-o<span class="w"> </span>dashboard.json
 </code></pre></div>
-<p>Open the result in dashforge's static viewer, validate it with
-<code>dashforge validate dashboard.json</code>, or serve it through
+<p>Open the result in uiforge's static viewer, validate it with
+<code>uiforge validate dashboard.json</code>, or serve it through
 <a href="https://github.com/ProductBuildersHQ/visionstudio">VisionStudio</a>'s DevX
 panel by writing it to <code>~/.plexusone/omnidevx/dashboard.json</code>. See
 <a href="../commands/devx/">DevX Commands</a>.</p>
+<h2 id="generate-a-quarterly-report">Generate a quarterly report<a class="headerlink" href="#generate-a-quarterly-report" title="Permanent link">&para;</a></h2>
+<p>Joins GitHub stats, git commit analytics, changelog highlights, and (with
+<code>--events</code>) OmniDevX token spend into one self-contained HTML report:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>devfolio<span class="w"> </span>quarterly<span class="w"> </span>report<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--username<span class="w"> </span>grokify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--since<span class="w"> </span><span class="m">2026</span>-04-01<span class="w"> </span>--until<span class="w"> </span><span class="m">2026</span>-06-30<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--repos<span class="w"> </span>~/go/src/github.com/grokify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--events<span class="w"> </span>~/.plexusone/omnidevx/data/events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--output<span class="w"> </span>Q2-2026.html
+</code></pre></div>
+<p><code>--repos</code>, <code>--stats</code>/<code>--stats-file</code>, and <code>--events</code> are all optional and
+independent — omit any of them and that section of the report is simply
+empty. See <a href="../commands/quarterly/">Quarterly Commands</a>.</p>
 
 
 

@@ -16,7 +16,7 @@
         <link rel="prev" href="../team/">
       
       
-        <link rel="next" href="../../releases/v0.2.0/">
+        <link rel="next" href="../quarterly/">
       
       
         
@@ -550,6 +550,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quarterly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quarterly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -637,6 +665,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -811,7 +867,7 @@ for collecting events into the store first.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </code></pre></div>
 <p>Builds a <code>DeveloperPeriodReport</code> via <code>omnidevx-core/report</code>, then exports
-it as a <a href="https://github.com/plexusone/dashforge">dashforge</a> dashboard: 8
+it as a <a href="https://github.com/plexusone/uiforge">uiforge</a> dashboard: 8
 headline metric tiles (sessions, prompts, commits + AI-assisted %, tool
 calls + failure rate, cost, coverage), a daily commits/prompts chart, a
 daily cost chart, and a source-coverage table.</p>
@@ -851,9 +907,9 @@ daily cost chart, and a source-coverage table.</p>
 <h2 id="viewing-the-dashboard">Viewing the dashboard<a class="headerlink" href="#viewing-the-dashboard" title="Permanent link">&para;</a></h2>
 <p>The output is a single portable JSON file — three ways to view it:</p>
 <ol>
-<li><strong>dashforge's static viewer</strong> — <code>viewer/index.html?dashboard=&lt;file&gt;</code> in
-   <a href="https://github.com/plexusone/dashforge">dashforge</a>.</li>
-<li><strong>Validate it</strong> — <code>dashforge validate dashboard.json</code> (via dashforge's
+<li><strong>uiforge's static viewer</strong> — <code>viewer/index.html?dashboard=&lt;file&gt;</code> in
+   <a href="https://github.com/plexusone/uiforge">uiforge</a>.</li>
+<li><strong>Validate it</strong> — <code>uiforge validate dashboard.json</code> (via uiforge's
    CLI) checks it against the <code>dashboardir</code> schema.</li>
 <li><strong>VisionStudio's DevX panel</strong> — write the output to
    <code>~/.plexusone/omnidevx/dashboard.json</code> and
