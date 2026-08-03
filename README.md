@@ -17,11 +17,14 @@ DevFolio generates developer portfolios and team velocity dashboards from:
 - 📋 Changelog data (via [structured-changelog](https://github.com/grokify/structured-changelog))
 - 📜 Git history
 - 🐙 GitHub activity (commits, PRs, issues, reviews)
+- 🤖 [OmniDevX](https://github.com/plexusone/omnidevx-core) telemetry (Claude Code, Codex CLI, git, GitHub — normalized into one canonical event model)
 
 ## Use Cases
 
 - 📊 **Team velocity dashboards** - Engineering managers track team output
 - 👤 **Individual contributor portfolios** - Track your own contributions over time
+- 🤖 **AI usage dashboards** - See your own AI-assisted development activity (sessions, tokens, cost, AI-assisted commits)
+- 📈 **Quarterly reports** - Combine GitHub stats, git commit analytics, changelog highlights, and token spend into one HTML report
 - 🔍 **Recruiting (hiring)** - Evaluate candidate contribution patterns
 - 💼 **Recruiting (job seeking)** - Showcase your development portfolio
 
@@ -60,6 +63,17 @@ devfolio contributor profile --user grokify -o profile.json
 devfolio devx dashboard --person person:jane -o dashboard.json
 ```
 
+### Quarterly Report
+
+```bash
+devfolio quarterly report \
+  --username grokify \
+  --since 2026-04-01 --until 2026-06-30 \
+  --repos ~/go/src/github.com/grokify \
+  --events ~/.plexusone/omnidevx/data/events \
+  --output Q2-2026.html
+```
+
 ## Commands
 
 ### Team Commands
@@ -89,13 +103,13 @@ Flags:
       --until string        End date (YYYY-MM-DD)
       --api-only            Force API-only mode, skip local repo detection
       --local-path string   Additional local path to search for repos
-      --dashboard           Output dashforge-compatible dashboard JSON
+      --dashboard           Output uiforge-compatible dashboard JSON
 ```
 
 ### DevX Commands
 
 ```bash
-# Export a dashforge dashboard from the local OmniDevX store
+# Export a uiforge dashboard from the local OmniDevX store
 devfolio devx dashboard [flags]
 
 Flags:
@@ -103,6 +117,27 @@ Flags:
       --days int            Number of days ending today to report on (default 30)
       --store-dir string    OmniDevX store directory (default: ~/.plexusone/omnidevx/data)
   -o, --output string       Output file (default: stdout)
+```
+
+### Quarterly Commands
+
+```bash
+# Generate a quarterly developer report
+devfolio quarterly report [flags]
+
+Flags:
+      --username string      GitHub username (required)
+      --year int              Year (e.g., 2026)
+      --quarter int           Quarter (1-4)
+      --since string          Start date (YYYY-MM-DD), overrides --year/--quarter
+      --until string          End date (YYYY-MM-DD), overrides --year/--quarter
+      --repos string          Root directory containing git repos
+      --stats string          Directory with gogithub profile stats (report.json)
+      --stats-file string     Direct path to a quarterly stats JSON file
+      --events string         omnidevx events directory for token spend
+  -o, --output string         Output file path (default "quarterly-report.html")
+      --format string         Output format: html, json, dashboard (default "html")
+      --chart-engine string   Chart engine: svg (self-contained), echarts (CDN) (default "svg")
 ```
 
 ## Output Formats
@@ -117,21 +152,40 @@ The velocity dashboard includes:
 - Activity heatmap data (GitHub-style)
 - Per-project contribution breakdown
 
-Compatible with [dashforge](https://github.com/plexusone/dashforge) static dashboards.
+Compatible with [uiforge](https://github.com/plexusone/uiforge) static dashboards.
 
 ### DevX Usage Dashboard
 
 Built from the [OmniDevX](https://github.com/plexusone/omnidevx-core)
 local event store (Claude Code, Codex CLI, git, and GitHub activity in one
-canonical model), exported as a [dashforge](https://github.com/plexusone/dashforge)
+canonical model), exported as a [uiforge](https://github.com/plexusone/uiforge)
 dashboard: headline metric tiles (sessions, prompts, commits, AI-assisted
 %, tool calls, cost, coverage), daily activity/cost charts, and a
 source-coverage table. Unlike `contributor profile --dashboard`, this
-export is built against dashforge's `dashboardir` package directly, so
-its chart widgets render correctly in dashforge's current viewer.
+export is built against uiforge's `dashboardir` package directly, so
+its chart widgets render correctly in uiforge's current viewer.
 
 Can also be served through [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio)'s
 DevX panel by writing the output to `~/.plexusone/omnidevx/dashboard.json`.
+
+### Quarterly Report
+
+Joins four data sources into one report: GitHub stats (via `gogithub/profile`),
+git commit analytics (via `gogit`), changelog highlights (via
+`structured-changelog`), and token spend (via `omnidevx-core`, when
+`--events` is passed).
+
+- **`--format html`** (default) — self-contained HTML report: summary
+  metrics, commit-category breakdown, LOC distribution, project
+  highlights, and (when `--events` is set) a token-spend section with
+  per-model/per-category donut and stacked-bar charts. Charts render as
+  inline SVG by default, or via CDN-hosted ECharts with `--chart-engine echarts`.
+- **`--format dashboard`** — exports to [uiforge](https://github.com/plexusone/uiforge)
+  Dashboard IR (JSON) for rendering in other tools.
+- **`--format json`** — the raw report data as JSON, for custom processing.
+
+Any repo with a `CHANGELOG.md`/`CHANGELOG.json` under `--repos` also
+contributes project highlights automatically — no separate flag needed.
 
 ### Contributor Profile
 
@@ -250,8 +304,9 @@ Full documentation at [plexusone.github.io/devfolio](https://plexusone.github.io
 
 - [omnidevx-core](https://github.com/plexusone/omnidevx-core) - Canonical event model, local store, period-report aggregation
 - [structured-changelog](https://github.com/grokify/structured-changelog) - JSON changelog format and aggregation
+- [gogit](https://github.com/grokify/gogit) - Git history parsing, commit stats
 - [gogithub](https://github.com/grokify/gogithub) - GitHub API utilities
-- [dashforge](https://github.com/plexusone/dashforge) - Static dashboard generation (the `devx dashboard` export format)
+- [uiforge](https://github.com/plexusone/uiforge) - Static dashboard generation (the `devx dashboard`/`quarterly report --format dashboard` export format)
 - [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio) - renders `devx dashboard` output in its DevX panel
 
 ## License

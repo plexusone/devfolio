@@ -46,7 +46,7 @@ The velocity dashboard includes:
 - Activity heatmap data (GitHub-style)
 - Per-project contribution breakdown
 
-Compatible with [dashforge](https://github.com/plexusone/dashforge) static
+Compatible with [uiforge](https://github.com/plexusone/uiforge) static
 dashboards.
 
 !!! note "Team velocity today vs. the OmniDevX rollup"

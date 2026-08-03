@@ -17,9 +17,11 @@ go build ./cmd/devfolio
 ## Authentication (contributor profile only)
 
 `devfolio contributor profile` requires a GitHub personal access token as
-`GITHUB_TOKEN`. `devfolio team velocity` and `devfolio devx dashboard` do
-not need one — team velocity reads a portfolio file, and devx dashboard
-reads the local OmniDevX event store.
+`GITHUB_TOKEN`. The other commands don't call the GitHub API directly:
+`team velocity` reads a portfolio file, `devx dashboard` reads the local
+OmniDevX event store, and `quarterly report` reads a pre-generated GitHub
+stats file (produced separately via `gogithub profile stats`, which does
+need `GITHUB_TOKEN`) — see [Quarterly Commands](commands/quarterly.md).
 
 ```bash
 export GITHUB_TOKEN=your_token_here
@@ -89,15 +91,33 @@ This one is different: it doesn't call the GitHub API at all. It reads
 events that [omnidevx-core](https://github.com/plexusone/omnidevx-core)'s
 providers already collected into the local store
 (`~/.plexusone/omnidevx/data/`), and it's the only command that produces a
-[dashforge](https://github.com/plexusone/dashforge) dashboard by default
+[uiforge](https://github.com/plexusone/uiforge) dashboard by default
 (contributor profile only does this with `--dashboard`):
 
 ```bash
 devfolio devx dashboard --person person:jane --days 30 -o dashboard.json
 ```
 
-Open the result in dashforge's static viewer, validate it with
-`dashforge validate dashboard.json`, or serve it through
+Open the result in uiforge's static viewer, validate it with
+`uiforge validate dashboard.json`, or serve it through
 [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio)'s DevX
 panel by writing it to `~/.plexusone/omnidevx/dashboard.json`. See
 [DevX Commands](commands/devx.md).
+
+## Generate a quarterly report
+
+Joins GitHub stats, git commit analytics, changelog highlights, and (with
+`--events`) OmniDevX token spend into one self-contained HTML report:
+
+```bash
+devfolio quarterly report \
+  --username grokify \
+  --since 2026-04-01 --until 2026-06-30 \
+  --repos ~/go/src/github.com/grokify \
+  --events ~/.plexusone/omnidevx/data/events \
+  --output Q2-2026.html
+```
+
+`--repos`, `--stats`/`--stats-file`, and `--events` are all optional and
+independent — omit any of them and that section of the report is simply
+empty. See [Quarterly Commands](commands/quarterly.md).

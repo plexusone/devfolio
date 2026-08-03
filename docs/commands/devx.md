@@ -18,7 +18,7 @@ devfolio devx dashboard --person person:jane [flags]
 ```
 
 Builds a `DeveloperPeriodReport` via `omnidevx-core/report`, then exports
-it as a [dashforge](https://github.com/plexusone/dashforge) dashboard: 8
+it as a [uiforge](https://github.com/plexusone/uiforge) dashboard: 8
 headline metric tiles (sessions, prompts, commits + AI-assisted %, tool
 calls + failure rate, cost, coverage), a daily commits/prompts chart, a
 daily cost chart, and a source-coverage table.
@@ -44,9 +44,9 @@ devfolio devx dashboard --person person:jane --days 7 -o dashboard.json
 
 The output is a single portable JSON file — three ways to view it:
 
-1. **dashforge's static viewer** — `viewer/index.html?dashboard=<file>` in
-   [dashforge](https://github.com/plexusone/dashforge).
-2. **Validate it** — `dashforge validate dashboard.json` (via dashforge's
+1. **uiforge's static viewer** — `viewer/index.html?dashboard=<file>` in
+   [uiforge](https://github.com/plexusone/uiforge).
+2. **Validate it** — `uiforge validate dashboard.json` (via uiforge's
    CLI) checks it against the `dashboardir` schema.
 3. **VisionStudio's DevX panel** — write the output to
    `~/.plexusone/omnidevx/dashboard.json` and

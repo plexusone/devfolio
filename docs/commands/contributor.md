@@ -18,7 +18,7 @@ devfolio contributor profile --user grokify -o profile.json
 | `--org` | Filter to specific organizations (repeatable) |
 | `--api-only` | Force API-only mode, skip local repo detection |
 | `--local-path` | Additional local path to search for repos |
-| `--dashboard` | Output [dashforge](https://github.com/plexusone/dashforge)-compatible dashboard JSON instead of the raw profile |
+| `--dashboard` | Output [uiforge](https://github.com/plexusone/uiforge)-compatible dashboard JSON instead of the raw profile |
 
 ### Examples
 
@@ -26,7 +26,7 @@ devfolio contributor profile --user grokify -o profile.json
 # Generate profile for a user
 devfolio contributor profile --user grokify -o profile.json
 
-# Generate a dashforge-compatible dashboard
+# Generate a uiforge-compatible dashboard
 devfolio contributor profile --user grokify --dashboard -o dashboard.json
 
 # Limit to specific organizations
@@ -51,11 +51,11 @@ profile generation runs.
 
 !!! note "`--dashboard` chart rendering"
     `--dashboard` uses an older chart-widget shape (`output/dashboard`
-    package) that predates dashforge's current viewer format. Metric and
+    package) that predates uiforge's current viewer format. Metric and
     table widgets render correctly; chart widgets (the language pie chart,
-    AI-tools bar chart) do not currently render in dashforge's viewer. The
+    AI-tools bar chart) do not currently render in uiforge's viewer. The
     `devx dashboard` command's export does not have this issue — it's built
-    against dashforge's `dashboardir` package directly.
+    against uiforge's `dashboardir` package directly.
 
 ## Profile Contents
 
