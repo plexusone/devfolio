@@ -7,6 +7,48 @@
   "maintainers": ["plexusone"],
   "releases": [
     {
+      "version": "v0.3.0",
+      "date": "2026-08-02",
+      "highlights": [
+        { "description": "`devfolio quarterly report`: self-contained HTML reports joining GitHub stats, git commit analytics, changelog highlights, and OmniDevX token spend — inline SVG or interactive ECharts, with `--format dashboard`/`--format json` exports", "commit": "cc3acf9" },
+        { "description": "`devx dashboard` gains period reports: weekly/monthly/quarterly dashboards with model-breakdown donut charts and stacked bar charts by model", "commit": "6421f9d" },
+        { "description": "Contributor profile: per-model AI stats (`AIModelStat`, `MostUsedModel`) bridged from `gogit.AIStats`, plus a new PRISM Control JSONL datasource", "commit": "675ca80" },
+        { "description": "`contributor/client.go` migrated off go-github onto `gogithub`'s version-isolated `clientv1.Client`; `github.com/google/go-github` is now only a transitive dependency", "commit": "3a1db72" }
+      ],
+      "added": [
+        { "description": "`quarterly` package: `Report` type composing GitHub stats, git commit stats, changelog highlights, and a token-spend summary", "commit": "976f3f8" },
+        { "description": "`quarterly.SDLCFlow` and Sankey diagram export (tokens → LOC/releases/repos → conventional-commit categories) via uiforge", "commit": "1f54b6a" },
+        { "description": "`contributor.AICollabStatsFromGogit()` bridges `gogit.AIStats` into contributor profile stats; `datasource/prism` loads PRISM Control JSONL exports", "commit": "675ca80" },
+        { "description": "`output/devxdashboard`: `PeriodReport`/`ExportPeriod` for weekly/monthly/quarterly dashboards with model-breakdown donut and stacked-bar charts", "commit": "6421f9d" },
+        { "description": "`quarterly.TokenSpendFromReport()`: token/cost metrics from a `DeveloperPeriodReport`, with per-model (`ByModel`) and per-source (`BySource`) breakdowns; `Builder` gains an `OmniDevXDir` option", "commit": "72b2567" },
+        { "description": "`ModelTokens` gains `CacheReadTokens`/`CacheCreationTokens` for Anthropic prompt-caching metrics", "commit": "b32c465" },
+        { "description": "`devfolio quarterly report` command: self-contained HTML report generation with SVG and ECharts chart engines, `--format html/json/dashboard`", "commit": "cc3acf9" },
+        { "description": "`quarterly.ExportDashboard()`: uiforge Dashboard IR (JSON) export with metric tiles, category-breakdown charts, AI model stats, and token spend visualization", "commit": "4b63441" }
+      ],
+      "changed": [
+        { "description": "Rename `dashforge` imports/references to `uiforge` across the codebase (pure import-path swap, no functional change)", "commit": "8ad4b31" },
+        { "description": "`contributor/client.go` migrated from a raw `*github.Client` to `gogithub`'s `clientv1.Client` and stable `gogithub.*` types, including a new `ListUserEvents` wrapper for the contribution activity heatmap — internal only, no exported API change", "commit": "3a1db72" }
+      ],
+      "fixed": [
+        { "description": "Resolve golangci-lint findings in `quarterly_report.go`, `output/devxdashboard/period.go`, and `quarterly/dashboard.go`", "commit": "390f4f9" }
+      ],
+      "tests": [
+        { "description": "Period dashboard export tests: monthly/weekly export, data sources, widget generation", "commit": "972fe8a" },
+        { "description": "`datasource/prism` tests", "commit": "a343b58" }
+      ],
+      "documentation": [
+        { "description": "Add DoltDB analytics store specification (PRD/TRD/PLAN/ROADMAP) for SQL-based event analytics", "commit": "f215162" },
+        { "description": "Add comprehensive CLAUDE.md for project onboarding: data sources, output formats, metrics, pricing, common tasks, debugging tips", "commit": "9c590a3" }
+      ],
+      "dependencies": [
+        { "description": "Bump `github.com/grokify/gogithub` from v0.13.0 to v0.14.0", "commit": "a2a42f4" },
+        { "description": "Add embedded pricing support via `github.com/plexusone/omnidevx-core`", "commit": "6f142a0" },
+        { "description": "Routine `go mod` dependency updates", "commit": "843406d" },
+        { "description": "Update `github.com/grokify/gogithub` to v0.16.0, dropping `github.com/google/go-github` to a transitive dependency", "commit": "3a1db72" },
+        { "description": "Routine `go mod` dependency updates", "commit": "8abb58a" }
+      ]
+    },
+    {
       "version": "v0.2.0",
       "date": "2026-07-20",
       "highlights": [
