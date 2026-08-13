@@ -5,7 +5,7 @@ go 1.26.5
 require (
 	github.com/grokify/gogit v0.8.0
 	github.com/grokify/gogithub v0.17.0
-	github.com/grokify/mogo v0.74.6
+	github.com/grokify/mogo v0.74.7
 	github.com/grokify/structured-changelog v0.15.1
 	github.com/plexusone/omnidevx-core v0.3.0
 	github.com/plexusone/uiforge v0.4.0
