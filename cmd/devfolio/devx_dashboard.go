@@ -22,6 +22,8 @@ var (
 	devxDashboardDays     int
 	devxDashboardStoreDir string
 	devxDashboardOutput   string
+	devxDashboardPeriod   string
+	devxDashboardFor      string
 )
 
 var devxDashboardCmd = &cobra.Command{
@@ -40,20 +42,33 @@ Examples:
   devfolio devx dashboard --person person:jane
 
   # Last 7 days, written to a file
-  devfolio devx dashboard --person person:jane --days 7 -o dashboard.json`,
+  devfolio devx dashboard --person person:jane --days 7 -o dashboard.json
+
+  # Calendar-month report, written to
+  # ~/.plexusone/omnidevx/reports/monthly/2026-07.json
+  devfolio devx dashboard --person person:jane --period monthly --for 2026-07-15
+
+  # Current calendar quarter (embeds monthly and weekly model breakdowns)
+  devfolio devx dashboard --person person:jane --period quarterly`,
 	RunE: runDevxDashboard,
 }
 
 func init() {
 	devxDashboardCmd.Flags().StringVar(&devxDashboardPerson, "person", "", "Canonical personId to report on (required)")
-	devxDashboardCmd.Flags().IntVar(&devxDashboardDays, "days", 30, "Number of days ending today to report on")
+	devxDashboardCmd.Flags().IntVar(&devxDashboardDays, "days", 30, "Number of days ending today to report on (ignored with --period)")
 	devxDashboardCmd.Flags().StringVar(&devxDashboardStoreDir, "store-dir", "", "OmniDevX store directory (default: ~/.plexusone/omnidevx/data)")
-	devxDashboardCmd.Flags().StringVarP(&devxDashboardOutput, "output", "o", "", "Output file (default: stdout)")
+	devxDashboardCmd.Flags().StringVarP(&devxDashboardOutput, "output", "o", "", "Output file (default: stdout, or the standard reports path with --period)")
+	devxDashboardCmd.Flags().StringVar(&devxDashboardPeriod, "period", "", "Generate a calendar period report instead of a rolling window: weekly, monthly, or quarterly")
+	devxDashboardCmd.Flags().StringVar(&devxDashboardFor, "for", "", "Anchor date for --period, YYYY-MM-DD (default: today)")
 	_ = devxDashboardCmd.MarkFlagRequired("person")
 	devxCmd.AddCommand(devxDashboardCmd)
 }
 
 func runDevxDashboard(_ *cobra.Command, _ []string) error {
+	if devxDashboardPeriod != "" {
+		return runDevxPeriodDashboard()
+	}
+
 	ctx := context.Background()
 
 	if devxDashboardDays <= 0 {

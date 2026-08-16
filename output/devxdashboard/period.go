@@ -33,10 +33,14 @@ type PeriodReport struct {
 	MonthlyByModel []ModelPeriodPoint
 }
 
-// ModelPeriodPoint represents one period's token/cost breakdown by model.
+// ModelPeriodPoint represents one sub-period's per-model metrics (e.g. one
+// week's input/output tokens and cost, keyed by model). Models holds every
+// metric a caller may want to chart (input_tokens, output_tokens, cost_usd,
+// ...) so a single point can back both the tokens and cost stacked-bar
+// charts without rebuilding sub-periods twice.
 type ModelPeriodPoint struct {
-	Label  string             `json:"label"`  // e.g., "W28", "Jul"
-	Models map[string]float64 `json:"models"` // model name → value
+	Label  string                        `json:"label"`  // e.g., "W28", "Jul"
+	Models map[string]map[string]float64 `json:"models"` // model name → metric → value
 }
 
 // ExportPeriod builds a dashboard for a period report with model breakdowns.
@@ -203,8 +207,12 @@ func buildStackedBarData(periodPoints []ModelPeriodPoint, metrics ...string) []m
 	result := make([]map[string]any, 0, len(periodPoints))
 	for _, pp := range periodPoints {
 		row := map[string]any{"period": pp.Label}
-		for model, value := range pp.Models {
-			row[model] = value
+		for model, modelMetrics := range pp.Models {
+			var total float64
+			for _, metric := range metrics {
+				total += modelMetrics[metric]
+			}
+			row[model] = total
 		}
 		result = append(result, row)
 	}

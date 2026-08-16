@@ -1,6 +1,7 @@
 package devxdashboard
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -51,8 +52,14 @@ func TestExportPeriod_Monthly(t *testing.T) {
 			{Date: "2026-07-02", Commits: 3, Prompts: 30, CostUSD: 1.50},
 		},
 		WeeklyByModel: []ModelPeriodPoint{
-			{Label: "W27", Models: map[string]float64{"claude-opus-4-6": 300_000, "claude-haiku-4-5": 200_000}},
-			{Label: "W28", Models: map[string]float64{"claude-opus-4-6": 300_000, "claude-haiku-4-5": 200_000}},
+			{Label: "W27", Models: map[string]map[string]float64{
+				"claude-opus-4-6":  {"input_tokens": 300_000, "cost_usd": 7.50},
+				"claude-haiku-4-5": {"input_tokens": 200_000, "cost_usd": 5.00},
+			}},
+			{Label: "W28", Models: map[string]map[string]float64{
+				"claude-opus-4-6":  {"input_tokens": 300_000, "cost_usd": 7.50},
+				"claude-haiku-4-5": {"input_tokens": 200_000, "cost_usd": 5.00},
+			}},
 		},
 	}
 
@@ -68,7 +75,7 @@ func TestExportPeriod_Monthly(t *testing.T) {
 	// Should have model data sources
 	hasTokensSource := false
 	hasCostSource := false
-	hasWeeklyTokens := false
+	var weeklyTokens, weeklyCost []map[string]any
 	for _, ds := range dashboard.DataSources {
 		switch ds.ID {
 		case "model-tokens-total":
@@ -76,7 +83,13 @@ func TestExportPeriod_Monthly(t *testing.T) {
 		case "model-cost-total":
 			hasCostSource = true
 		case "weekly-tokens-by-model":
-			hasWeeklyTokens = true
+			if err := json.Unmarshal(ds.Data, &weeklyTokens); err != nil {
+				t.Fatalf("unmarshaling weekly-tokens-by-model: %v", err)
+			}
+		case "weekly-cost-by-model":
+			if err := json.Unmarshal(ds.Data, &weeklyCost); err != nil {
+				t.Fatalf("unmarshaling weekly-cost-by-model: %v", err)
+			}
 		}
 	}
 
@@ -86,8 +99,22 @@ func TestExportPeriod_Monthly(t *testing.T) {
 	if !hasCostSource {
 		t.Error("missing model-cost-total data source")
 	}
-	if !hasWeeklyTokens {
-		t.Error("missing weekly-tokens-by-model data source")
+	if weeklyTokens == nil {
+		t.Fatal("missing weekly-tokens-by-model data source")
+	}
+	if weeklyCost == nil {
+		t.Fatal("missing weekly-cost-by-model data source")
+	}
+	// Tokens and cost must be pulled from their own metrics, not the same
+	// underlying values (regression: buildStackedBarData used to ignore
+	// its metrics argument and return the same numbers for both charts).
+	gotTokens, _ := weeklyTokens[0]["claude-opus-4-6"].(float64)
+	gotCost, _ := weeklyCost[0]["claude-opus-4-6"].(float64)
+	if gotTokens != 300_000 {
+		t.Errorf("weekly tokens for claude-opus-4-6 = %v, want 300000", gotTokens)
+	}
+	if gotCost != 7.50 {
+		t.Errorf("weekly cost for claude-opus-4-6 = %v, want 7.50", gotCost)
 	}
 
 	// Should have donut and stacked bar widgets
