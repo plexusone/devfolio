@@ -173,10 +173,12 @@ func TestExportPeriod_Weekly(t *testing.T) {
 }
 
 func TestWeekLabel(t *testing.T) {
-	date := time.Date(2026, 7, 10, 0, 0, 0, 0, time.UTC)
-	got := WeekLabel(date)
-	if got != "W28" {
-		t.Errorf("WeekLabel = %q, want W28", got)
+	// Callers always pass the Monday starting the week (see
+	// cmd/devfolio/devx_period.go's isoWeekStart-aligned iteration).
+	monday := time.Date(2026, 7, 6, 0, 0, 0, 0, time.UTC)
+	got := WeekLabel(monday)
+	if got != "Mon Jul 6, 2026" {
+		t.Errorf("WeekLabel = %q, want %q", got, "Mon Jul 6, 2026")
 	}
 }
 

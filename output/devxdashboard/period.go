@@ -39,7 +39,7 @@ type PeriodReport struct {
 // ...) so a single point can back both the tokens and cost stacked-bar
 // charts without rebuilding sub-periods twice.
 type ModelPeriodPoint struct {
-	Label  string                        `json:"label"`  // e.g., "W28", "Jul"
+	Label  string                        `json:"label"`  // e.g., "Mon Jul 6, 2026", "Jul"
 	Models map[string]map[string]float64 `json:"models"` // model name → metric → value
 }
 
@@ -219,10 +219,12 @@ func buildStackedBarData(periodPoints []ModelPeriodPoint, metrics ...string) []m
 	return result
 }
 
-// WeekLabel returns the ISO week label for a date (e.g., "W28").
+// WeekLabel returns a human-readable label for the week starting on t
+// (e.g., "Mon Aug 17, 2026") — used as the x-axis row label for weekly
+// stacked-bar breakdowns, where "W28" reads as a number to look up rather
+// than a date a reader can place on a calendar.
 func WeekLabel(t time.Time) string {
-	_, week := t.ISOWeek()
-	return fmt.Sprintf("W%02d", week)
+	return t.Format("Mon Jan 2, 2006")
 }
 
 // MonthLabel returns the month label for a date (e.g., "Jul").

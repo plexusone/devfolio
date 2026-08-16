@@ -66,7 +66,12 @@ func runDevxPeriodDashboard() error {
 		Daily:  daily,
 	}
 	if periodType == devxdashboard.PeriodMonthly || periodType == devxdashboard.PeriodQuarterly {
-		pr.WeeklyByModel = modelPointsForSubPeriods(read.Events, subject, start, end,
+		// Anchor to the Monday on/before the period start so each bucket is
+		// a real calendar week (Mon-Sun), not an arbitrary 7-day chunk from
+		// whatever weekday the month/quarter happens to start on — WeekLabel
+		// formats the bucket's start date, so misaligned buckets would show
+		// as e.g. "Wed Jul 1, 2026" instead of a real week.
+		pr.WeeklyByModel = modelPointsForSubPeriods(read.Events, subject, isoWeekStart(start), end,
 			func(t time.Time) time.Time { return t.AddDate(0, 0, 7) }, devxdashboard.WeekLabel)
 	}
 	if periodType == devxdashboard.PeriodQuarterly {
