@@ -45,6 +45,9 @@ DevFolio generates developer portfolios and team velocity dashboards from:
     # Requires events already collected into the local OmniDevX store
     # via the omnidevx-core providers (this command only reads/reports)
     devfolio devx dashboard --person person:jane -o dashboard.json
+
+    # Or a calendar period report (weekly/monthly/quarterly)
+    devfolio devx dashboard --person person:jane --period monthly
     ```
 
 === "Quarterly Report"

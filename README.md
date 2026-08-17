@@ -61,6 +61,10 @@ devfolio contributor profile --user grokify -o profile.json
 # Requires events already collected into the local OmniDevX store
 # (via omnidevx-core providers — this command only reads/reports)
 devfolio devx dashboard --person person:jane -o dashboard.json
+
+# Calendar-month report, written to
+# ~/.plexusone/omnidevx/reports/monthly/2026-08.json
+devfolio devx dashboard --person person:jane --period monthly
 ```
 
 ### Quarterly Report
@@ -114,9 +118,11 @@ devfolio devx dashboard [flags]
 
 Flags:
       --person string      Canonical personId to report on (required)
-      --days int            Number of days ending today to report on (default 30)
+      --days int            Number of days ending today to report on (default 30, ignored with --period)
       --store-dir string    OmniDevX store directory (default: ~/.plexusone/omnidevx/data)
-  -o, --output string       Output file (default: stdout)
+  -o, --output string       Output file (default: stdout, or the standard reports path with --period)
+      --period string       Generate a calendar period report instead of a rolling window: weekly, monthly, or quarterly
+      --for string          Anchor date for --period, YYYY-MM-DD (default: today)
 ```
 
 ### Quarterly Commands
@@ -167,6 +173,14 @@ its chart widgets render correctly in uiforge's current viewer.
 
 Can also be served through [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio)'s
 DevX panel by writing the output to `~/.plexusone/omnidevx/dashboard.json`.
+
+**`--period weekly|monthly|quarterly`** builds a calendar-aligned report
+instead — weeks are always Monday-Sunday, months/quarters add donut and
+stacked-bar model-breakdown charts (monthly gets a weekly breakdown,
+quarterly gets both weekly and monthly). Written by default to
+`~/.plexusone/omnidevx/reports/{type}/{label}.json`, which VisionStudio's
+period selector reads via `GET /api/devx/periods` and
+`GET /api/devx/reports/{periodType}/{label}`.
 
 ### Quarterly Report
 

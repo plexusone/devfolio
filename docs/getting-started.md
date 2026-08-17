@@ -101,8 +101,11 @@ devfolio devx dashboard --person person:jane --days 30 -o dashboard.json
 Open the result in uiforge's static viewer, validate it with
 `uiforge validate dashboard.json`, or serve it through
 [VisionStudio](https://github.com/ProductBuildersHQ/visionstudio)'s DevX
-panel by writing it to `~/.plexusone/omnidevx/dashboard.json`. See
-[DevX Commands](commands/devx.md).
+panel by writing it to `~/.plexusone/omnidevx/dashboard.json`.
+
+For a calendar-aligned report instead of a rolling window, add
+`--period weekly|monthly|quarterly`. See [DevX Commands](commands/devx.md)
+for the full flag reference and VisionStudio's period selector.
 
 ## Generate a quarterly report
 

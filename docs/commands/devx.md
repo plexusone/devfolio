@@ -26,9 +26,11 @@ daily cost chart, and a source-coverage table.
 | Flag | Description |
 |------|-------------|
 | `--person` | Canonical personId to report on (required) |
-| `--days` | Number of days ending today to report on (default `30`) |
+| `--days` | Number of days ending today to report on (default `30`, ignored with `--period`) |
 | `--store-dir` | OmniDevX store directory (default: `~/.plexusone/omnidevx/data`) |
-| `-o`, `--output` | Output file (default: stdout) |
+| `-o`, `--output` | Output file (default: stdout, or the standard reports path with `--period`) |
+| `--period` | Generate a calendar period report instead of a rolling window: `weekly`, `monthly`, or `quarterly` |
+| `--for` | Anchor date for `--period`, `YYYY-MM-DD` (default: today) |
 
 ### Examples
 
@@ -40,12 +42,39 @@ devfolio devx dashboard --person person:jane
 devfolio devx dashboard --person person:jane --days 7 -o dashboard.json
 ```
 
+## Period reports (`--period`)
+
+`--period weekly|monthly|quarterly` builds a calendar-aligned report instead
+of a rolling window — the period containing `--for` (default: today), with
+weeks always Monday-Sunday. Monthly reports add a weekly per-model token/cost
+breakdown; quarterly reports add both weekly and monthly per-model
+breakdowns, each rendered as donut and stacked-bar chart widgets in the
+resulting dashboard.
+
+```bash
+# Current calendar month, written to
+# ~/.plexusone/omnidevx/reports/monthly/2026-08.json
+devfolio devx dashboard --person person:jane --period monthly
+
+# A specific past month
+devfolio devx dashboard --person person:jane --period monthly --for 2026-07-15
+
+# Current calendar quarter (embeds monthly and weekly model breakdowns)
+devfolio devx dashboard --person person:jane --period quarterly
+```
+
+Unless `-o`/`--output` is given, period reports are written to
+`~/.plexusone/omnidevx/reports/{weekly,monthly,quarterly}/{label}.json` —
+the exact path VisionStudio's daemon reads from (see below).
+
 ## Viewing the dashboard
 
-The output is a single portable JSON file — three ways to view it:
+The output is a single portable JSON file:
 
 1. **uiforge's static viewer** — `viewer/index.html?dashboard=<file>` in
-   [uiforge](https://github.com/plexusone/uiforge).
+   [uiforge](https://github.com/plexusone/uiforge) (v0.5.0+ has a light/dark
+   theme toggle and caps numeric display in tooltips, axis labels, and
+   metric tiles to 2 decimal places).
 2. **Validate it** — `uiforge validate dashboard.json` (via uiforge's
    CLI) checks it against the `dashboardir` schema.
 3. **VisionStudio's DevX panel** — write the output to
@@ -61,6 +90,12 @@ The output is a single portable JSON file — three ways to view it:
    VisionStudio only ever reads this already-generated file — it never
    queries the OmniDevX event store directly. DevFolio decides what's
    safe to show; VisionStudio is a read-only consumer.
+4. **VisionStudio's period selector** — period reports written to the
+   standard reports path (the `--period` default) are listed at
+   `GET /api/devx/periods` and served individually at
+   `GET /api/devx/reports/{periodType}/{label}` — VisionStudio's UI has a
+   period dropdown that switches between them, with bar and donut chart
+   renderers for the model breakdowns.
 
 ## Data quality
 
