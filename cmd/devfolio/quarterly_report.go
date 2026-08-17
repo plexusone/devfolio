@@ -1512,12 +1512,16 @@ type eventRecord struct {
 	Attributes map[string]any `json:"attributes"`
 }
 
-func processEventsFile(path string, ts *quarterly.TokenSpendSummary) error {
+func processEventsFile(path string, ts *quarterly.TokenSpendSummary) (err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
 
 	scanner := bufio.NewScanner(f)
 	buf := make([]byte, 0, 64*1024)

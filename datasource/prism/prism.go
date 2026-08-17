@@ -74,12 +74,17 @@ func (d *ExportData) RMIsByRepo() map[string][]RMI {
 }
 
 // LoadFile reads a PRISM Control JSONL export file and returns parsed data.
-func LoadFile(path string) (*ExportData, error) {
+func LoadFile(path string) (data *ExportData, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("prism: open export file: %w", err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() {
+		if cerr := f.Close(); cerr != nil && err == nil {
+			err = cerr
+			data = nil
+		}
+	}()
 	return Load(f)
 }
 

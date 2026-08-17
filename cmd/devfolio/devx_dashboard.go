@@ -60,7 +60,9 @@ func init() {
 	devxDashboardCmd.Flags().StringVarP(&devxDashboardOutput, "output", "o", "", "Output file (default: stdout, or the standard reports path with --period)")
 	devxDashboardCmd.Flags().StringVar(&devxDashboardPeriod, "period", "", "Generate a calendar period report instead of a rolling window: weekly, monthly, or quarterly")
 	devxDashboardCmd.Flags().StringVar(&devxDashboardFor, "for", "", "Anchor date for --period, YYYY-MM-DD (default: today)")
-	_ = devxDashboardCmd.MarkFlagRequired("person")
+	if err := devxDashboardCmd.MarkFlagRequired("person"); err != nil {
+		panic(err)
+	}
 	devxCmd.AddCommand(devxDashboardCmd)
 }
 

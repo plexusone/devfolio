@@ -64,7 +64,9 @@ func init() {
 	contributorProfileCmd.Flags().BoolVar(&contribProfileAPIOnly, "api-only", false, "Force API-only mode, skip local repo detection")
 	contributorProfileCmd.Flags().StringVar(&contribProfileLocalPath, "local-path", "", "Additional local path to search for repos")
 	contributorProfileCmd.Flags().BoolVar(&contribProfileDashboard, "dashboard", false, "Output uiforge-compatible dashboard JSON")
-	_ = contributorProfileCmd.MarkFlagRequired("user")
+	if err := contributorProfileCmd.MarkFlagRequired("user"); err != nil {
+		panic(err)
+	}
 	contributorCmd.AddCommand(contributorProfileCmd)
 }
 
