@@ -520,6 +520,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#period-reports-period" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Period reports (--period)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#viewing-the-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -673,6 +684,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.4.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.4.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.3.0/" class="md-nav__link">
         
   
@@ -812,6 +851,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#period-reports-period" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Period reports (--period)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#viewing-the-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -885,7 +935,7 @@ daily cost chart, and a source-coverage table.</p>
 </tr>
 <tr>
 <td><code>--days</code></td>
-<td>Number of days ending today to report on (default <code>30</code>)</td>
+<td>Number of days ending today to report on (default <code>30</code>, ignored with <code>--period</code>)</td>
 </tr>
 <tr>
 <td><code>--store-dir</code></td>
@@ -893,7 +943,15 @@ daily cost chart, and a source-coverage table.</p>
 </tr>
 <tr>
 <td><code>-o</code>, <code>--output</code></td>
-<td>Output file (default: stdout)</td>
+<td>Output file (default: stdout, or the standard reports path with <code>--period</code>)</td>
+</tr>
+<tr>
+<td><code>--period</code></td>
+<td>Generate a calendar period report instead of a rolling window: <code>weekly</code>, <code>monthly</code>, or <code>quarterly</code></td>
+</tr>
+<tr>
+<td><code>--for</code></td>
+<td>Anchor date for <code>--period</code>, <code>YYYY-MM-DD</code> (default: today)</td>
 </tr>
 </tbody>
 </table>
@@ -904,11 +962,33 @@ daily cost chart, and a source-coverage table.</p>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Last 7 days, written to a file</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>--days<span class="w"> </span><span class="m">7</span><span class="w"> </span>-o<span class="w"> </span>dashboard.json
 </code></pre></div>
+<h2 id="period-reports-period">Period reports (<code>--period</code>)<a class="headerlink" href="#period-reports-period" title="Permanent link">&para;</a></h2>
+<p><code>--period weekly|monthly|quarterly</code> builds a calendar-aligned report instead
+of a rolling window — the period containing <code>--for</code> (default: today), with
+weeks always Monday-Sunday. Monthly reports add a weekly per-model token/cost
+breakdown; quarterly reports add both weekly and monthly per-model
+breakdowns, each rendered as donut and stacked-bar chart widgets in the
+resulting dashboard.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Current calendar month, written to</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># ~/.plexusone/omnidevx/reports/monthly/2026-08.json</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>--period<span class="w"> </span>monthly
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># A specific past month</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>--period<span class="w"> </span>monthly<span class="w"> </span>--for<span class="w"> </span><span class="m">2026</span>-07-15
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Current calendar quarter (embeds monthly and weekly model breakdowns)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>--period<span class="w"> </span>quarterly
+</code></pre></div>
+<p>Unless <code>-o</code>/<code>--output</code> is given, period reports are written to
+<code>~/.plexusone/omnidevx/reports/{weekly,monthly,quarterly}/{label}.json</code> —
+the exact path VisionStudio's daemon reads from (see below).</p>
 <h2 id="viewing-the-dashboard">Viewing the dashboard<a class="headerlink" href="#viewing-the-dashboard" title="Permanent link">&para;</a></h2>
-<p>The output is a single portable JSON file — three ways to view it:</p>
+<p>The output is a single portable JSON file:</p>
 <ol>
 <li><strong>uiforge's static viewer</strong> — <code>viewer/index.html?dashboard=&lt;file&gt;</code> in
-   <a href="https://github.com/plexusone/uiforge">uiforge</a>.</li>
+   <a href="https://github.com/plexusone/uiforge">uiforge</a> (v0.5.0+ has a light/dark
+   theme toggle and caps numeric display in tooltips, axis labels, and
+   metric tiles to 2 decimal places).</li>
 <li><strong>Validate it</strong> — <code>uiforge validate dashboard.json</code> (via uiforge's
    CLI) checks it against the <code>dashboardir</code> schema.</li>
 <li><strong>VisionStudio's DevX panel</strong> — write the output to
@@ -917,11 +997,17 @@ daily cost chart, and a source-coverage table.</p>
    daemon serves it at <code>GET /api/devx/dashboard</code>, rendered in its sidebar's
    DevX → Usage Dashboard view:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>-o<span class="w"> </span>~/.plexusone/omnidevx/dashboard.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>devfolio<span class="w"> </span>devx<span class="w"> </span>dashboard<span class="w"> </span>--person<span class="w"> </span>person:jane<span class="w"> </span>-o<span class="w"> </span>~/.plexusone/omnidevx/dashboard.json
 </code></pre></div>
 <p>VisionStudio only ever reads this already-generated file — it never
    queries the OmniDevX event store directly. DevFolio decides what's
-   safe to show; VisionStudio is a read-only consumer.</p>
+   safe to show; VisionStudio is a read-only consumer.
+4. <strong>VisionStudio's period selector</strong> — period reports written to the
+   standard reports path (the <code>--period</code> default) are listed at
+   <code>GET /api/devx/periods</code> and served individually at
+   <code>GET /api/devx/reports/{periodType}/{label}</code> — VisionStudio's UI has a
+   period dropdown that switches between them, with bar and donut chart
+   renderers for the model breakdowns.</p>
 <h2 id="data-quality">Data quality<a class="headerlink" href="#data-quality" title="Permanent link">&para;</a></h2>
 <p>If the report period includes GitHub <code>devx.profile.snapshot</code> or
 <code>devx.contribution.snapshot</code> events (period-total snapshots, not daily
