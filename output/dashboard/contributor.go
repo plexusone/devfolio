@@ -46,16 +46,16 @@ func buildContributorDataSources(profile *contributor.Profile) ([]DataSource, er
 
 	// Summary data source with key metrics
 	summaryData := map[string]any{
-		"username":        profile.Username,
-		"name":            profile.Name,
-		"totalCommits":    profile.Stats.TotalCommits,
-		"totalPRs":        profile.Stats.TotalPRs,
-		"totalRepos":      profile.Stats.TotalRepositories,
-		"ownedRepos":      profile.Stats.OwnedRepos,
+		"username":         profile.Username,
+		"name":             profile.Name,
+		"totalCommits":     profile.Stats.TotalCommits,
+		"totalPRs":         profile.Stats.TotalPRs,
+		"totalRepos":       profile.Stats.TotalRepositories,
+		"ownedRepos":       profile.Stats.OwnedRepos,
 		"contributedRepos": profile.Stats.ContributedRepos,
-		"aiCommits":       profile.AIStats.TotalAICommits,
-		"aiPercent":       profile.AIStats.AICommitPercent,
-		"mostUsedTool":    profile.AIStats.MostUsedTool,
+		"aiCommits":        profile.AIStats.TotalAICommits,
+		"aiPercent":        profile.AIStats.AICommitPercent,
+		"mostUsedTool":     profile.AIStats.MostUsedTool,
 	}
 	summaryJSON, err := json.Marshal(summaryData)
 	if err != nil {

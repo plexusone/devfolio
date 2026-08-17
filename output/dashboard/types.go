@@ -145,11 +145,11 @@ type Encoding struct {
 
 // Style defines chart-level styling.
 type Style struct {
-	Colors     []string `json:"colors,omitempty"`
-	Legend     *Legend  `json:"legend,omitempty"`
-	XAxis      *Axis    `json:"xAxis,omitempty"`
-	YAxis      *Axis    `json:"yAxis,omitempty"`
-	Horizontal bool     `json:"horizontal,omitempty"`
+	Colors     []string       `json:"colors,omitempty"`
+	Legend     *Legend        `json:"legend,omitempty"`
+	XAxis      *Axis          `json:"xAxis,omitempty"`
+	YAxis      *Axis          `json:"yAxis,omitempty"`
+	Horizontal bool           `json:"horizontal,omitempty"`
 	Calendar   *CalendarStyle `json:"calendar,omitempty"`
 }
 

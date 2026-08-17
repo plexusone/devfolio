@@ -24,18 +24,18 @@ type Initiative struct {
 
 // RMI represents a PRISM Control Roadmap Item as exported by prismctl.
 type RMI struct {
-	ID           string `json:"id"`
-	Repo         string `json:"repo"`
-	Initiative   string `json:"initiative"`
-	Phase        string `json:"phase"`
-	Title        string `json:"title"`
-	Type         string `json:"type"`
-	Status       string `json:"status"`
-	Required     bool   `json:"required"`
-	AssignedTo   string `json:"assignedTo,omitempty"`
-	CompletedAt  string `json:"completedAt,omitempty"`
-	CreatedAt    string `json:"createdAt,omitempty"`
-	UpdatedAt    string `json:"updatedAt,omitempty"`
+	ID          string `json:"id"`
+	Repo        string `json:"repo"`
+	Initiative  string `json:"initiative"`
+	Phase       string `json:"phase"`
+	Title       string `json:"title"`
+	Type        string `json:"type"`
+	Status      string `json:"status"`
+	Required    bool   `json:"required"`
+	AssignedTo  string `json:"assignedTo,omitempty"`
+	CompletedAt string `json:"completedAt,omitempty"`
+	CreatedAt   string `json:"createdAt,omitempty"`
+	UpdatedAt   string `json:"updatedAt,omitempty"`
 }
 
 // ExportRecord represents a single line in a PRISM Control JSONL export.

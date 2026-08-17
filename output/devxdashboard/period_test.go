@@ -19,11 +19,11 @@ func TestExportPeriod_Monthly(t *testing.T) {
 		},
 		Metrics: report.MetricSet{
 			Combined: map[string]report.Metric{
-				"sessions":    {Value: 10},
-				"prompts":     {Value: 500},
-				"commits":     {Value: 50},
+				"sessions":     {Value: 10},
+				"prompts":      {Value: 500},
+				"commits":      {Value: 50},
 				"input_tokens": {Value: 1_000_000},
-				"cost_usd":    {Value: 25.50},
+				"cost_usd":     {Value: 25.50},
 			},
 			ByModel: map[string]map[string]report.Metric{
 				"claude-opus-4-6": {

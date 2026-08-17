@@ -85,8 +85,8 @@ func TestTokenSpendFromReportNil(t *testing.T) {
 func TestModelBreakdown(t *testing.T) {
 	ts := &TokenSpendSummary{
 		ByModel: map[string]ModelTokens{
-			"claude-sonnet-5": {Model: "claude-sonnet-5", InputTokens: 600000, OutputTokens: 300000, CostUSD: 15.00},
-			"claude-opus-4-5": {Model: "claude-opus-4-5", InputTokens: 400000, OutputTokens: 200000, CostUSD: 20.00},
+			"claude-sonnet-5":  {Model: "claude-sonnet-5", InputTokens: 600000, OutputTokens: 300000, CostUSD: 15.00},
+			"claude-opus-4-5":  {Model: "claude-opus-4-5", InputTokens: 400000, OutputTokens: 200000, CostUSD: 20.00},
 			"claude-haiku-4-5": {Model: "claude-haiku-4-5", InputTokens: 100000, OutputTokens: 50000, CostUSD: 1.00},
 		},
 	}

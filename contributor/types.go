@@ -7,20 +7,20 @@ import (
 
 // Profile represents an individual contributor's development profile.
 type Profile struct {
-	Username     string            `json:"username"`
-	Name         string            `json:"name,omitempty"`
-	AvatarURL    string            `json:"avatarUrl,omitempty"`
-	Bio          string            `json:"bio,omitempty"`
-	Company      string            `json:"company,omitempty"`
-	Location     string            `json:"location,omitempty"`
-	Blog         string            `json:"blog,omitempty"`
-	Repositories []RepoContrib     `json:"repositories"`
-	Stats        ContributorStats  `json:"stats"`
-	AIStats      AICollabStats     `json:"aiStats"`
-	Activity     []DailyActivity   `json:"activity"`
-	Languages    map[string]int    `json:"languages"`
-	DateRange    DateRange         `json:"dateRange"`
-	GeneratedAt  time.Time         `json:"generatedAt"`
+	Username     string           `json:"username"`
+	Name         string           `json:"name,omitempty"`
+	AvatarURL    string           `json:"avatarUrl,omitempty"`
+	Bio          string           `json:"bio,omitempty"`
+	Company      string           `json:"company,omitempty"`
+	Location     string           `json:"location,omitempty"`
+	Blog         string           `json:"blog,omitempty"`
+	Repositories []RepoContrib    `json:"repositories"`
+	Stats        ContributorStats `json:"stats"`
+	AIStats      AICollabStats    `json:"aiStats"`
+	Activity     []DailyActivity  `json:"activity"`
+	Languages    map[string]int   `json:"languages"`
+	DateRange    DateRange        `json:"dateRange"`
+	GeneratedAt  time.Time        `json:"generatedAt"`
 }
 
 // RepoContrib represents contributions to a single repository.
@@ -93,29 +93,29 @@ type ContributionEvent struct {
 // This measures how "AI-native" a developer is by tracking
 // commits with AI tool co-authors.
 type AICollabStats struct {
-	TotalAICommits   int                   `json:"totalAiCommits"`
-	AICommitPercent  float64               `json:"aiCommitPercent"`
-	ByTool           map[string]AIToolStat `json:"byTool"`
-	MostUsedTool     string                `json:"mostUsedTool,omitempty"`
-	MostUsedModel    string                `json:"mostUsedModel,omitempty"`   // e.g., "Claude Code/Sonnet 4"
-	FirstAICommit    string                `json:"firstAiCommit,omitempty"`   // Date of first AI-assisted commit
-	RecentTrend      string                `json:"recentTrend,omitempty"`     // increasing, stable, decreasing
-	AIActivity       []DailyActivity       `json:"aiActivity,omitempty"`      // Daily AI-assisted commits for heatmap
+	TotalAICommits  int                   `json:"totalAiCommits"`
+	AICommitPercent float64               `json:"aiCommitPercent"`
+	ByTool          map[string]AIToolStat `json:"byTool"`
+	MostUsedTool    string                `json:"mostUsedTool,omitempty"`
+	MostUsedModel   string                `json:"mostUsedModel,omitempty"` // e.g., "Claude Code/Sonnet 4"
+	FirstAICommit   string                `json:"firstAiCommit,omitempty"` // Date of first AI-assisted commit
+	RecentTrend     string                `json:"recentTrend,omitempty"`   // increasing, stable, decreasing
+	AIActivity      []DailyActivity       `json:"aiActivity,omitempty"`    // Daily AI-assisted commits for heatmap
 }
 
 // AIToolStat holds statistics for a specific AI coding tool.
 type AIToolStat struct {
-	Name        string                  `json:"name"`
-	Commits     int                     `json:"commits"`
-	FirstUsed   string                  `json:"firstUsed,omitempty"`   // YYYY-MM-DD
-	LastUsed    string                  `json:"lastUsed,omitempty"`    // YYYY-MM-DD
-	Recognized  bool                    `json:"recognized"`            // true if GitHub recognizes the co-author
-	ByModel     map[string]AIModelStat  `json:"byModel,omitempty"`     // Per-model breakdown
+	Name       string                 `json:"name"`
+	Commits    int                    `json:"commits"`
+	FirstUsed  string                 `json:"firstUsed,omitempty"` // YYYY-MM-DD
+	LastUsed   string                 `json:"lastUsed,omitempty"`  // YYYY-MM-DD
+	Recognized bool                   `json:"recognized"`          // true if GitHub recognizes the co-author
+	ByModel    map[string]AIModelStat `json:"byModel,omitempty"`   // Per-model breakdown
 }
 
 // AIModelStat holds statistics for a specific model within a tool.
 type AIModelStat struct {
-	Model     string `json:"model"`               // e.g., "Sonnet 4", "Opus 4.5", "gemini-2.5-pro"
+	Model     string `json:"model"` // e.g., "Sonnet 4", "Opus 4.5", "gemini-2.5-pro"
 	Commits   int    `json:"commits"`
 	FirstUsed string `json:"firstUsed,omitempty"` // YYYY-MM-DD
 	LastUsed  string `json:"lastUsed,omitempty"`  // YYYY-MM-DD

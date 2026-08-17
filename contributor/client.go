@@ -65,14 +65,14 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 	reportProgress(opts, stageFetchUser, 0, 0, "Fetching user info", true)
 
 	profile := &Profile{
-		Username:    opts.Username,
-		Name:        user.Name,
-		AvatarURL:   user.AvatarURL,
-		Bio:         user.Bio,
-		Company:     user.Company,
-		Location:    user.Location,
-		Blog:        user.Blog,
-		Languages:   make(map[string]int),
+		Username:  opts.Username,
+		Name:      user.Name,
+		AvatarURL: user.AvatarURL,
+		Bio:       user.Bio,
+		Company:   user.Company,
+		Location:  user.Location,
+		Blog:      user.Blog,
+		Languages: make(map[string]int),
 		AIStats: AICollabStats{
 			ByTool: make(map[string]AIToolStat),
 		},
