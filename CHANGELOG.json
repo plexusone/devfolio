@@ -7,6 +7,33 @@
   "maintainers": ["plexusone"],
   "releases": [
     {
+      "version": "v0.4.0",
+      "date": "2026-08-17",
+      "highlights": [
+        { "description": "`devfolio devx dashboard --period weekly|monthly|quarterly`: calendar-aligned period reports (Monday-Sunday weeks) with weekly/monthly per-model breakdowns, written by default to `~/.plexusone/omnidevx/reports/{type}/{label}.json` — the path VisionStudio's `/api/devx/periods` and `/api/devx/reports/{periodType}/{label}` endpoints read from", "commit": "dbfcf99" },
+        { "description": "Weekly period labels changed from ISO week numbers (\"W28\") to the week's Monday date (\"Mon Jul 6, 2026\") for human readability, with the underlying weekly buckets fixed to align to real calendar weeks", "commit": "faf3a10" },
+        { "description": "Bump `github.com/plexusone/uiforge` to v0.5.0 (static viewer light/dark theme toggle and 2-decimal numeric formatting)", "commit": "8fa6ec6" }
+      ],
+      "added": [
+        { "description": "`--period` and `--for` flags on `devfolio devx dashboard`: generate weekly/monthly/quarterly calendar reports instead of a rolling `--days` window, with weekly/monthly model breakdowns feeding the quarterly report's donut and stacked-bar widgets", "commit": "dbfcf99" }
+      ],
+      "fixed": [
+        { "description": "`output/devxdashboard.buildStackedBarData` ignored its `metrics` argument, so the weekly/monthly cost and token stacked-bar charts silently returned identical values; `ModelPeriodPoint.Models` now carries a metric map per model so each chart pulls its own numbers", "commit": "dbfcf99" },
+        { "description": "Resolve 4 pre-existing \"error discard without comment\" findings in `cmd/devfolio` and `datasource/prism` via proper return/panic handling instead of silent discard", "commit": "2dceb0f" }
+      ],
+      "documentation": [
+        { "description": "Document `devx dashboard --period`/`--for` across README.md, docs/commands/devx.md, docs/index.md, and docs/getting-started.md; note VisionStudio's period endpoints and uiforge v0.5.0's viewer theme toggle", "commit": "f32d76d" }
+      ],
+      "dependencies": [
+        { "description": "Bump `github.com/grokify/mogo` from v0.74.6 to v0.74.7", "commit": "f81f4e3" },
+        { "description": "Bump `github.com/plexusone/uiforge` from v0.4.0 to v0.5.0", "commit": "8fa6ec6" },
+        { "description": "Routine transitive dependency updates via go mod tidy", "commit": "b1b9994" }
+      ],
+      "internal": [
+        { "description": "Fix gofmt drift across 9 files (struct-literal alignment), surfaced by the v0.4.0 release validation gate", "commit": "e39300b" }
+      ]
+    },
+    {
       "version": "v0.3.0",
       "date": "2026-08-02",
       "highlights": [
