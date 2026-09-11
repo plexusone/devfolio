@@ -3,7 +3,7 @@ module github.com/plexusone/devfolio
 go 1.26.5
 
 require (
-	github.com/grokify/gogit v0.8.0
+	github.com/grokify/gogit v0.10.0
 	github.com/grokify/gogithub v0.17.0
 	github.com/grokify/mogo v0.74.8
 	github.com/grokify/structured-changelog v0.16.0
