@@ -77,7 +77,7 @@ func (b *Builder) Build(ctx context.Context) (*Report, error) {
 	}
 
 	if b.opts.OmniDevXDir != "" {
-		tokenSpend, err := b.loadTokenSpend(since, until)
+		tokenSpend, err := b.loadTokenSpend()
 		if err == nil {
 			r.TokenSpend = tokenSpend
 		}
@@ -123,7 +123,7 @@ func (b *Builder) loadGitHubStats() (*profile.AggregateStats, error) {
 }
 
 // loadTokenSpend loads the omnidevx period report for the quarter.
-func (b *Builder) loadTokenSpend(since, until time.Time) (*TokenSpendSummary, error) {
+func (b *Builder) loadTokenSpend() (*TokenSpendSummary, error) {
 	// Look for a period report file matching the quarter
 	// Format: period-YYYY-QN.json or similar
 	pattern := filepath.Join(b.opts.OmniDevXDir, fmt.Sprintf("period-%d-Q%d.json", b.opts.Year, b.opts.Quarter))

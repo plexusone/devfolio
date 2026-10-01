@@ -117,14 +117,10 @@ func runQuarterlyReport(cmd *cobra.Command, args []string) error {
 
 	// Load token spend from events
 	if qrEventsDir != "" {
-		tokenSpend, err := loadTokenSpendFromEvents(qrEventsDir, since, until)
-		if err != nil {
-			fmt.Printf("Warning: could not load events: %v\n", err)
-		} else {
-			report.TokenSpend = tokenSpend
-			fmt.Printf("Loaded token data: %d input, %d output tokens\n",
-				tokenSpend.TotalInputTokens, tokenSpend.TotalOutputTokens)
-		}
+		tokenSpend := loadTokenSpendFromEvents(qrEventsDir, since, until)
+		report.TokenSpend = tokenSpend
+		fmt.Printf("Loaded token data: %d input, %d output tokens\n",
+			tokenSpend.TotalInputTokens, tokenSpend.TotalOutputTokens)
 	}
 
 	switch qrFormat {
@@ -1478,7 +1474,7 @@ func buildSDLCFlow(r *quarterly.Report) *quarterly.SDLCFlow {
 }
 
 // loadTokenSpendFromEvents scans the events directory for token usage.
-func loadTokenSpendFromEvents(eventsDir string, since, until time.Time) (*quarterly.TokenSpendSummary, error) {
+func loadTokenSpendFromEvents(eventsDir string, since, until time.Time) *quarterly.TokenSpendSummary {
 	ts := &quarterly.TokenSpendSummary{
 		ByModel:  make(map[string]quarterly.ModelTokens),
 		BySource: make(map[string]quarterly.SourceTokens),
@@ -1498,7 +1494,7 @@ func loadTokenSpendFromEvents(eventsDir string, since, until time.Time) (*quarte
 		}
 	}
 
-	return ts, nil
+	return ts
 }
 
 type eventRecord struct {

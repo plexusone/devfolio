@@ -126,11 +126,7 @@ func (c *Client) GenerateProfile(ctx context.Context, opts ProfileOptions) (*Pro
 
 		// Fall back to API if local not found or failed
 		if opts.APIOnly || localErr != nil || (contrib.Commits == 0 && contrib.PRs == 0) {
-			contrib, aiData, err = c.getRepoContributions(ctx, opts.Username, repo, opts)
-			if err != nil {
-				// Log but continue
-				continue
-			}
+			contrib, aiData = c.getRepoContributions(ctx, opts.Username, repo, opts)
 		}
 
 		if contrib.Commits > 0 || contrib.PRs > 0 || contrib.Issues > 0 {
@@ -426,7 +422,7 @@ type aiToolData struct {
 	byDate map[string]int
 }
 
-func (c *Client) getRepoContributions(ctx context.Context, username string, repo *gogithub.Repository, opts ProfileOptions) (RepoContrib, map[string]aiToolData, error) {
+func (c *Client) getRepoContributions(ctx context.Context, username string, repo *gogithub.Repository, opts ProfileOptions) (RepoContrib, map[string]aiToolData) {
 	owner := repoOwnerLogin(repo)
 	name := repo.Name
 
@@ -512,7 +508,7 @@ func (c *Client) getRepoContributions(ctx context.Context, username string, repo
 		}
 	}
 
-	return contrib, aiData, nil
+	return contrib, aiData
 }
 
 func (c *Client) getActivityHeatmap(ctx context.Context, opts ProfileOptions) ([]DailyActivity, error) {

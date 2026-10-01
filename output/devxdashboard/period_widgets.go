@@ -11,16 +11,16 @@ func buildPeriodWidgets(periodType PeriodType) []dashboardir.Widget {
 
 	// Row 0-1: eight headline metric tiles (same as base dashboard)
 	widgets = append(widgets,
-		metricWidget("sessions", "Sessions", pos(0, 0, 3, 2), "summary", "sessions", "number", nil),
-		metricWidget("prompts", "Prompts", pos(3, 0, 3, 2), "summary", "prompts", "number", nil),
-		metricWidget("commits", "Commits", pos(6, 0, 3, 2), "summary", "commits", "number", nil),
-		metricWidget("ai-assisted-pct", "AI-assisted commits", pos(9, 0, 3, 2), "summary", "aiAssistedPct", "percent", &dashboardir.FormatOptions{Decimals: 1}),
+		metricWidget("sessions", "Sessions", pos(0, 0, 3, 2), "sessions", "number", nil),
+		metricWidget("prompts", "Prompts", pos(3, 0, 3, 2), "prompts", "number", nil),
+		metricWidget("commits", "Commits", pos(6, 0, 3, 2), "commits", "number", nil),
+		metricWidget("ai-assisted-pct", "AI-assisted commits", pos(9, 0, 3, 2), "aiAssistedPct", "percent", &dashboardir.FormatOptions{Decimals: 1}),
 	)
 	widgets = append(widgets,
-		metricWidget("tool-calls", "Tool calls", pos(0, 2, 3, 2), "summary", "toolCalls", "number", nil),
-		metricWidget("tool-failure-rate", "Tool failure rate", pos(3, 2, 3, 2), "summary", "toolFailureRate", "percent", &dashboardir.FormatOptions{Decimals: 1}),
-		metricWidget("cost", "Cost", pos(6, 2, 3, 2), "summary", "costUsd", "currency", &dashboardir.FormatOptions{Decimals: 0, Prefix: "$"}),
-		metricWidget("coverage", "Coverage", pos(9, 2, 3, 2), "summary", "coveragePct", "percent", &dashboardir.FormatOptions{Decimals: 0}),
+		metricWidget("tool-calls", "Tool calls", pos(0, 2, 3, 2), "toolCalls", "number", nil),
+		metricWidget("tool-failure-rate", "Tool failure rate", pos(3, 2, 3, 2), "toolFailureRate", "percent", &dashboardir.FormatOptions{Decimals: 1}),
+		metricWidget("cost", "Cost", pos(6, 2, 3, 2), "costUsd", "currency", &dashboardir.FormatOptions{Decimals: 0, Prefix: "$"}),
+		metricWidget("coverage", "Coverage", pos(9, 2, 3, 2), "coveragePct", "percent", &dashboardir.FormatOptions{Decimals: 0}),
 	)
 
 	// Row 2: donut charts for tokens and cost by model
@@ -51,12 +51,12 @@ func buildPeriodWidgets(periodType PeriodType) []dashboardir.Widget {
 
 	// Daily activity charts
 	widgets = append(widgets,
-		lineChartWidget("daily-activity", "Commits & prompts per day", pos(0, yOffset, 7, 5), "daily",
+		lineChartWidget("daily-activity", "Commits & prompts per day", pos(0, yOffset, 7, 5),
 			[]chartMark{
 				{ID: "commits", Geometry: "line", XField: "date", YField: "commits", Name: "Commits", Color: "#2a78d6"},
 				{ID: "prompts", Geometry: "line", XField: "date", YField: "prompts", Name: "Prompts", Color: "#008300"},
 			}, true),
-		lineChartWidget("daily-cost", "Cost per day (USD)", pos(7, yOffset, 5, 5), "daily",
+		lineChartWidget("daily-cost", "Cost per day (USD)", pos(7, yOffset, 5, 5),
 			[]chartMark{
 				{ID: "cost", Geometry: "line", XField: "date", YField: "costUsd", Name: "Cost", Color: "#2a78d6"},
 			}, false),

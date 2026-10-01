@@ -49,10 +49,7 @@ func ExportPeriod(pr *PeriodReport) (*dashboardir.Dashboard, error) {
 		return nil, fmt.Errorf("devxdashboard: period report is nil")
 	}
 
-	dataSources, err := buildPeriodDataSources(pr)
-	if err != nil {
-		return nil, fmt.Errorf("devxdashboard: building data sources: %w", err)
-	}
+	dataSources := buildPeriodDataSources(pr)
 
 	return &dashboardir.Dashboard{
 		ID:          fmt.Sprintf("omnidevx-%s-report", pr.Type),
@@ -85,7 +82,7 @@ func periodTitle(t PeriodType) string {
 	}
 }
 
-func buildPeriodDataSources(pr *PeriodReport) ([]dashboardir.DataSource, error) {
+func buildPeriodDataSources(pr *PeriodReport) []dashboardir.DataSource {
 	r := pr.Report
 
 	// Base summary metrics (same as regular export)
@@ -177,7 +174,7 @@ func buildPeriodDataSources(pr *PeriodReport) ([]dashboardir.DataSource, error) 
 		})
 	}
 
-	return sources, nil
+	return sources
 }
 
 // donutPoint is one segment in a donut/pie chart.

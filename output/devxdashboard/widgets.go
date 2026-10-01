@@ -11,28 +11,28 @@ func buildWidgets() []dashboardir.Widget {
 
 	// Row 1: four headline metric tiles (12 columns / 3 width each).
 	widgets = append(widgets,
-		metricWidget("sessions", "Sessions", pos(0, 0, 3, 2), "summary", "sessions", "number", nil),
-		metricWidget("prompts", "Prompts", pos(3, 0, 3, 2), "summary", "prompts", "number", nil),
-		metricWidget("commits", "Commits", pos(6, 0, 3, 2), "summary", "commits", "number", nil),
-		metricWidget("ai-assisted-pct", "AI-assisted commits", pos(9, 0, 3, 2), "summary", "aiAssistedPct", "percent", &dashboardir.FormatOptions{Decimals: 1}),
+		metricWidget("sessions", "Sessions", pos(0, 0, 3, 2), "sessions", "number", nil),
+		metricWidget("prompts", "Prompts", pos(3, 0, 3, 2), "prompts", "number", nil),
+		metricWidget("commits", "Commits", pos(6, 0, 3, 2), "commits", "number", nil),
+		metricWidget("ai-assisted-pct", "AI-assisted commits", pos(9, 0, 3, 2), "aiAssistedPct", "percent", &dashboardir.FormatOptions{Decimals: 1}),
 	)
 
 	// Row 2: four more.
 	widgets = append(widgets,
-		metricWidget("tool-calls", "Tool calls", pos(0, 2, 3, 2), "summary", "toolCalls", "number", nil),
-		metricWidget("tool-failure-rate", "Tool failure rate", pos(3, 2, 3, 2), "summary", "toolFailureRate", "percent", &dashboardir.FormatOptions{Decimals: 1}),
-		metricWidget("cost", "Cost", pos(6, 2, 3, 2), "summary", "costUsd", "currency", &dashboardir.FormatOptions{Decimals: 0, Prefix: "$"}),
-		metricWidget("coverage", "Coverage", pos(9, 2, 3, 2), "summary", "coveragePct", "percent", &dashboardir.FormatOptions{Decimals: 0}),
+		metricWidget("tool-calls", "Tool calls", pos(0, 2, 3, 2), "toolCalls", "number", nil),
+		metricWidget("tool-failure-rate", "Tool failure rate", pos(3, 2, 3, 2), "toolFailureRate", "percent", &dashboardir.FormatOptions{Decimals: 1}),
+		metricWidget("cost", "Cost", pos(6, 2, 3, 2), "costUsd", "currency", &dashboardir.FormatOptions{Decimals: 0, Prefix: "$"}),
+		metricWidget("coverage", "Coverage", pos(9, 2, 3, 2), "coveragePct", "percent", &dashboardir.FormatOptions{Decimals: 0}),
 	)
 
 	// Row 3: daily activity charts.
 	widgets = append(widgets,
-		lineChartWidget("daily-activity", "Commits & prompts per day", pos(0, 4, 7, 5), "daily",
+		lineChartWidget("daily-activity", "Commits & prompts per day", pos(0, 4, 7, 5),
 			[]chartMark{
 				{ID: "commits", Geometry: "line", XField: "date", YField: "commits", Name: "Commits", Color: "#2a78d6"},
 				{ID: "prompts", Geometry: "line", XField: "date", YField: "prompts", Name: "Prompts", Color: "#008300"},
 			}, true),
-		lineChartWidget("daily-cost", "Cost per day (USD)", pos(7, 4, 5, 5), "daily",
+		lineChartWidget("daily-cost", "Cost per day (USD)", pos(7, 4, 5, 5),
 			[]chartMark{
 				{ID: "cost", Geometry: "line", XField: "date", YField: "costUsd", Name: "Cost", Color: "#2a78d6"},
 			}, false),
@@ -48,7 +48,7 @@ func pos(x, y, w, h int) dashboardir.Position {
 	return dashboardir.Position{X: x, Y: y, W: w, H: h}
 }
 
-func metricWidget(id, title string, p dashboardir.Position, dataSourceID, valueField, format string, opts *dashboardir.FormatOptions) dashboardir.Widget {
+func metricWidget(id, title string, p dashboardir.Position, valueField, format string, opts *dashboardir.FormatOptions) dashboardir.Widget {
 	cfg, _ := json.Marshal(dashboardir.MetricConfig{
 		ValueField:    valueField,
 		Format:        format,
@@ -59,7 +59,7 @@ func metricWidget(id, title string, p dashboardir.Position, dataSourceID, valueF
 		Title:        title,
 		Type:         dashboardir.WidgetTypeMetric,
 		Position:     p,
-		DataSourceID: dataSourceID,
+		DataSourceID: "summary",
 		Config:       cfg,
 	}
 }
@@ -77,7 +77,7 @@ type chartMark struct {
 	Color    string
 }
 
-func lineChartWidget(id, title string, p dashboardir.Position, dataSourceID string, marks []chartMark, showLegend bool) dashboardir.Widget {
+func lineChartWidget(id, title string, p dashboardir.Position, marks []chartMark, showLegend bool) dashboardir.Widget {
 	type mark struct {
 		ID     string            `json:"id"`
 		Name   string            `json:"name,omitempty"`
@@ -130,7 +130,7 @@ func lineChartWidget(id, title string, p dashboardir.Position, dataSourceID stri
 		Title:        title,
 		Type:         dashboardir.WidgetTypeChart,
 		Position:     p,
-		DataSourceID: dataSourceID,
+		DataSourceID: "daily",
 		Config:       cfgJSON,
 	}
 }
