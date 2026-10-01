@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/plexusone/dashforge/dashboardir"
 	omnidevx "github.com/plexusone/omnidevx-core"
 	report "github.com/plexusone/omnidevx-core/report"
-	"github.com/plexusone/dashforge/dashboardir"
 )
 
 func metric(v float64) report.Metric {
