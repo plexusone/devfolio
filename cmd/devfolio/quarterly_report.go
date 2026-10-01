@@ -369,7 +369,6 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 
 		fmt.Fprintf(&sb, `<div class="card"><div class="card-title">Reviews</div><div class="card-value">%d</div></div>`,
 			r.GitHubStats.Reviews)
-
 	}
 
 	sb.WriteString(`</div>`)
@@ -401,7 +400,6 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				<span class="category-pct">%.1f%%</span>
 				<span class="category-count">%d</span>
 			</li>`, cat.Category, barWidth, pct, cat.Commits)
-
 		}
 		sb.WriteString(`</ul>`)
 		sb.WriteString(`</div>`)
@@ -454,7 +452,6 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				<span class="category-pct">%.1f%%</span>
 				<span class="category-count">%s</span>
 			</li>`, cat.category, barWidth, pct, formatNumber(cat.loc))
-
 		}
 		sb.WriteString(`</ul>`)
 		fmt.Fprintf(&sb, `<p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">Total: %s lines (insertions + deletions)</p>`, formatNumber(totalLOC))
@@ -508,7 +505,6 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 				for _, m := range models {
 					fmt.Fprintf(&sb, `<div class="model-item"><span class="model-name">%s</span><span>%d commits</span></div>`,
 						m.key, m.stats.Commits)
-
 				}
 				sb.WriteString(`</div>`)
 			}
@@ -820,7 +816,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					color := colors[i%len(colors)]
 					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
 						color, m.name, pct)
-
 				}
 				sb.WriteString(`</div>`)
 				sb.WriteString(`</div>`)
@@ -864,7 +859,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					color := colors[i%len(colors)]
 					fmt.Fprintf(&sb, `<div class="donut-legend-item"><span class="donut-legend-color" style="background:%s"></span>%s (%.1f%%)</div>`,
 						color, m.name, pct)
-
 				}
 				sb.WriteString(`</div>`)
 				sb.WriteString(`</div>`)
@@ -1107,7 +1101,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					tooltip := fmt.Sprintf("%s: %s", labels[i], formatWithCommas(seg/1000)+"K")
 					fmt.Fprintf(&sb, `<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
 						segPct, segmentColors[i], tooltip)
-
 				}
 				sb.WriteString(`</div>`)
 				// Model label - show short name
@@ -1153,7 +1146,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					tooltip := fmt.Sprintf("%s: $%.2f", labels[i], cost)
 					fmt.Fprintf(&sb, `<div class="stacked-bar-segment" style="flex: %.1f; background: %s;" data-tooltip="%s"></div>`,
 						segPct, segmentColors[i], tooltip)
-
 				}
 				sb.WriteString(`</div>`)
 				shortName := strings.TrimPrefix(m.name, "claude-")
@@ -1212,7 +1204,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					tokenPct,
 					m.cost,
 					costPct)
-
 			}
 			sb.WriteString(`</tbody>`)
 			sb.WriteString(`</table>`)
@@ -1256,7 +1247,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					pricing.OutputPerMillion,
 					pricing.CacheReadPerMillion,
 					pricing.CacheCreationPerMillion)
-
 			}
 			sb.WriteString(`</tbody>`)
 			sb.WriteString(`</table>`)
@@ -1312,7 +1302,6 @@ function downloadModelCSV() {
 `,
 				m.name, m.input, m.output, m.cacheRead, m.cacheWrite, m.cost,
 				m.inputPrice, m.outputPrice, m.cacheReadPrice, m.cacheWritePrice)
-
 		}
 
 		sb.WriteString(`
