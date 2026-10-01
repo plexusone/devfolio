@@ -269,9 +269,9 @@ func findLocalRepo(searchPaths []string, owner, name string) string {
 
 // isGitRepo checks if a path is a git repository.
 func isGitRepo(path string) bool {
-	// path is an intentional user-supplied CLI argument (local repo base dir);
-	// filepath.Clean sanitizes it before use.
-	info, err := os.Stat(filepath.Join(filepath.Clean(path), ".git"))
+	// path is an intentional user-supplied CLI argument (local repo base dir),
+	// cleaned via filepath.Clean before use.
+	info, err := os.Stat(filepath.Join(filepath.Clean(path), ".git")) //nolint:gosec // G703: intentional user-supplied CLI base dir, cleaned via filepath.Clean
 	return err == nil && info.IsDir()
 }
 
