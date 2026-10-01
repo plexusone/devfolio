@@ -4,132 +4,355 @@
   "repository": "https://github.com/plexusone/devfolio",
   "versioning": "semver",
   "commitConvention": "conventional",
-  "maintainers": ["plexusone"],
+  "maintainers": [
+    "plexusone"
+  ],
   "releases": [
+    {
+      "version": "v0.5.0",
+      "date": "2026-10-01",
+      "highlights": [
+        {
+          "description": "Migrated the dashboard IR dependency from uiforge to dashforge — the dashboardir package moved to dashforge and uiforge no longer publishes the v0.5.0 that provided it, which left v0.4.0 unresolvable on a clean fetch; v0.5.0 restores installability"
+        }
+      ],
+      "changed": [
+        {
+          "description": "output/devxdashboard and quarterly now import github.com/plexusone/dashforge/dashboardir (same package and types) instead of uiforge/dashboardir",
+          "commit": "5198474"
+        }
+      ],
+      "dependencies": [
+        {
+          "description": "Add github.com/plexusone/dashforge v0.7.0 (provides dashboardir)"
+        },
+        {
+          "description": "Remove github.com/plexusone/uiforge (no longer publishes the dashboardir package)"
+        },
+        {
+          "description": "go directive 1.26.5 to 1.26.6 (required by dashforge v0.7.0)"
+        }
+      ],
+      "breaking": [
+        {
+          "description": "Exported devxdashboard.Export and ExportPeriod now return *dashforge/dashboardir.Dashboard instead of *uiforge/dashboardir.Dashboard; consumers naming the dashboardir type must update their import path"
+        }
+      ]
+    },
     {
       "version": "v0.4.0",
       "date": "2026-08-17",
       "highlights": [
-        { "description": "`devfolio devx dashboard --period weekly|monthly|quarterly`: calendar-aligned period reports (Monday-Sunday weeks) with weekly/monthly per-model breakdowns, written by default to `~/.plexusone/omnidevx/reports/{type}/{label}.json` — the path VisionStudio's `/api/devx/periods` and `/api/devx/reports/{periodType}/{label}` endpoints read from", "commit": "dbfcf99" },
-        { "description": "Weekly period labels changed from ISO week numbers (\"W28\") to the week's Monday date (\"Mon Jul 6, 2026\") for human readability, with the underlying weekly buckets fixed to align to real calendar weeks", "commit": "faf3a10" },
-        { "description": "Bump `github.com/plexusone/uiforge` to v0.5.0 (static viewer light/dark theme toggle and 2-decimal numeric formatting)", "commit": "8fa6ec6" }
+        {
+          "description": "`devfolio devx dashboard --period weekly|monthly|quarterly`: calendar-aligned period reports (Monday-Sunday weeks) with weekly/monthly per-model breakdowns, written by default to `~/.plexusone/omnidevx/reports/{type}/{label}.json` — the path VisionStudio's `/api/devx/periods` and `/api/devx/reports/{periodType}/{label}` endpoints read from",
+          "commit": "dbfcf99"
+        },
+        {
+          "description": "Weekly period labels changed from ISO week numbers (\"W28\") to the week's Monday date (\"Mon Jul 6, 2026\") for human readability, with the underlying weekly buckets fixed to align to real calendar weeks",
+          "commit": "faf3a10"
+        },
+        {
+          "description": "Bump `github.com/plexusone/uiforge` to v0.5.0 (static viewer light/dark theme toggle and 2-decimal numeric formatting)",
+          "commit": "8fa6ec6"
+        }
       ],
       "added": [
-        { "description": "`--period` and `--for` flags on `devfolio devx dashboard`: generate weekly/monthly/quarterly calendar reports instead of a rolling `--days` window, with weekly/monthly model breakdowns feeding the quarterly report's donut and stacked-bar widgets", "commit": "dbfcf99" }
+        {
+          "description": "`--period` and `--for` flags on `devfolio devx dashboard`: generate weekly/monthly/quarterly calendar reports instead of a rolling `--days` window, with weekly/monthly model breakdowns feeding the quarterly report's donut and stacked-bar widgets",
+          "commit": "dbfcf99"
+        }
       ],
       "fixed": [
-        { "description": "`output/devxdashboard.buildStackedBarData` ignored its `metrics` argument, so the weekly/monthly cost and token stacked-bar charts silently returned identical values; `ModelPeriodPoint.Models` now carries a metric map per model so each chart pulls its own numbers", "commit": "dbfcf99" },
-        { "description": "Resolve 4 pre-existing \"error discard without comment\" findings in `cmd/devfolio` and `datasource/prism` via proper return/panic handling instead of silent discard", "commit": "2dceb0f" }
+        {
+          "description": "`output/devxdashboard.buildStackedBarData` ignored its `metrics` argument, so the weekly/monthly cost and token stacked-bar charts silently returned identical values; `ModelPeriodPoint.Models` now carries a metric map per model so each chart pulls its own numbers",
+          "commit": "dbfcf99"
+        },
+        {
+          "description": "Resolve 4 pre-existing \"error discard without comment\" findings in `cmd/devfolio` and `datasource/prism` via proper return/panic handling instead of silent discard",
+          "commit": "2dceb0f"
+        }
       ],
       "documentation": [
-        { "description": "Document `devx dashboard --period`/`--for` across README.md, docs/commands/devx.md, docs/index.md, and docs/getting-started.md; note VisionStudio's period endpoints and uiforge v0.5.0's viewer theme toggle", "commit": "f32d76d" }
+        {
+          "description": "Document `devx dashboard --period`/`--for` across README.md, docs/commands/devx.md, docs/index.md, and docs/getting-started.md; note VisionStudio's period endpoints and uiforge v0.5.0's viewer theme toggle",
+          "commit": "f32d76d"
+        }
       ],
       "dependencies": [
-        { "description": "Bump `github.com/grokify/mogo` from v0.74.6 to v0.74.7", "commit": "f81f4e3" },
-        { "description": "Bump `github.com/plexusone/uiforge` from v0.4.0 to v0.5.0", "commit": "8fa6ec6" },
-        { "description": "Routine transitive dependency updates via go mod tidy", "commit": "b1b9994" }
+        {
+          "description": "Bump `github.com/grokify/mogo` from v0.74.6 to v0.74.7",
+          "commit": "f81f4e3"
+        },
+        {
+          "description": "Bump `github.com/plexusone/uiforge` from v0.4.0 to v0.5.0",
+          "commit": "8fa6ec6"
+        },
+        {
+          "description": "Routine transitive dependency updates via go mod tidy",
+          "commit": "b1b9994"
+        }
       ],
       "internal": [
-        { "description": "Fix gofmt drift across 9 files (struct-literal alignment), surfaced by the v0.4.0 release validation gate", "commit": "e39300b" }
+        {
+          "description": "Fix gofmt drift across 9 files (struct-literal alignment), surfaced by the v0.4.0 release validation gate",
+          "commit": "e39300b"
+        }
       ]
     },
     {
       "version": "v0.3.0",
       "date": "2026-08-02",
       "highlights": [
-        { "description": "`devfolio quarterly report`: self-contained HTML reports joining GitHub stats, git commit analytics, changelog highlights, and OmniDevX token spend — inline SVG or interactive ECharts, with `--format dashboard`/`--format json` exports", "commit": "cc3acf9" },
-        { "description": "`devx dashboard` gains period reports: weekly/monthly/quarterly dashboards with model-breakdown donut charts and stacked bar charts by model", "commit": "6421f9d" },
-        { "description": "Contributor profile: per-model AI stats (`AIModelStat`, `MostUsedModel`) bridged from `gogit.AIStats`, plus a new PRISM Control JSONL datasource", "commit": "675ca80" },
-        { "description": "`contributor/client.go` migrated off go-github onto `gogithub`'s version-isolated `clientv1.Client`; `github.com/google/go-github` is now only a transitive dependency", "commit": "3a1db72" }
+        {
+          "description": "`devfolio quarterly report`: self-contained HTML reports joining GitHub stats, git commit analytics, changelog highlights, and OmniDevX token spend — inline SVG or interactive ECharts, with `--format dashboard`/`--format json` exports",
+          "commit": "cc3acf9"
+        },
+        {
+          "description": "`devx dashboard` gains period reports: weekly/monthly/quarterly dashboards with model-breakdown donut charts and stacked bar charts by model",
+          "commit": "6421f9d"
+        },
+        {
+          "description": "Contributor profile: per-model AI stats (`AIModelStat`, `MostUsedModel`) bridged from `gogit.AIStats`, plus a new PRISM Control JSONL datasource",
+          "commit": "675ca80"
+        },
+        {
+          "description": "`contributor/client.go` migrated off go-github onto `gogithub`'s version-isolated `clientv1.Client`; `github.com/google/go-github` is now only a transitive dependency",
+          "commit": "3a1db72"
+        }
       ],
       "added": [
-        { "description": "`quarterly` package: `Report` type composing GitHub stats, git commit stats, changelog highlights, and a token-spend summary", "commit": "976f3f8" },
-        { "description": "`quarterly.SDLCFlow` and Sankey diagram export (tokens → LOC/releases/repos → conventional-commit categories) via uiforge", "commit": "1f54b6a" },
-        { "description": "`contributor.AICollabStatsFromGogit()` bridges `gogit.AIStats` into contributor profile stats; `datasource/prism` loads PRISM Control JSONL exports", "commit": "675ca80" },
-        { "description": "`output/devxdashboard`: `PeriodReport`/`ExportPeriod` for weekly/monthly/quarterly dashboards with model-breakdown donut and stacked-bar charts", "commit": "6421f9d" },
-        { "description": "`quarterly.TokenSpendFromReport()`: token/cost metrics from a `DeveloperPeriodReport`, with per-model (`ByModel`) and per-source (`BySource`) breakdowns; `Builder` gains an `OmniDevXDir` option", "commit": "72b2567" },
-        { "description": "`ModelTokens` gains `CacheReadTokens`/`CacheCreationTokens` for Anthropic prompt-caching metrics", "commit": "b32c465" },
-        { "description": "`devfolio quarterly report` command: self-contained HTML report generation with SVG and ECharts chart engines, `--format html/json/dashboard`", "commit": "cc3acf9" },
-        { "description": "`quarterly.ExportDashboard()`: uiforge Dashboard IR (JSON) export with metric tiles, category-breakdown charts, AI model stats, and token spend visualization", "commit": "4b63441" }
+        {
+          "description": "`quarterly` package: `Report` type composing GitHub stats, git commit stats, changelog highlights, and a token-spend summary",
+          "commit": "976f3f8"
+        },
+        {
+          "description": "`quarterly.SDLCFlow` and Sankey diagram export (tokens → LOC/releases/repos → conventional-commit categories) via uiforge",
+          "commit": "1f54b6a"
+        },
+        {
+          "description": "`contributor.AICollabStatsFromGogit()` bridges `gogit.AIStats` into contributor profile stats; `datasource/prism` loads PRISM Control JSONL exports",
+          "commit": "675ca80"
+        },
+        {
+          "description": "`output/devxdashboard`: `PeriodReport`/`ExportPeriod` for weekly/monthly/quarterly dashboards with model-breakdown donut and stacked-bar charts",
+          "commit": "6421f9d"
+        },
+        {
+          "description": "`quarterly.TokenSpendFromReport()`: token/cost metrics from a `DeveloperPeriodReport`, with per-model (`ByModel`) and per-source (`BySource`) breakdowns; `Builder` gains an `OmniDevXDir` option",
+          "commit": "72b2567"
+        },
+        {
+          "description": "`ModelTokens` gains `CacheReadTokens`/`CacheCreationTokens` for Anthropic prompt-caching metrics",
+          "commit": "b32c465"
+        },
+        {
+          "description": "`devfolio quarterly report` command: self-contained HTML report generation with SVG and ECharts chart engines, `--format html/json/dashboard`",
+          "commit": "cc3acf9"
+        },
+        {
+          "description": "`quarterly.ExportDashboard()`: uiforge Dashboard IR (JSON) export with metric tiles, category-breakdown charts, AI model stats, and token spend visualization",
+          "commit": "4b63441"
+        }
       ],
       "changed": [
-        { "description": "Rename `dashforge` imports/references to `uiforge` across the codebase (pure import-path swap, no functional change)", "commit": "8ad4b31" },
-        { "description": "`contributor/client.go` migrated from a raw `*github.Client` to `gogithub`'s `clientv1.Client` and stable `gogithub.*` types, including a new `ListUserEvents` wrapper for the contribution activity heatmap — internal only, no exported API change", "commit": "3a1db72" }
+        {
+          "description": "Rename `dashforge` imports/references to `uiforge` across the codebase (pure import-path swap, no functional change)",
+          "commit": "8ad4b31"
+        },
+        {
+          "description": "`contributor/client.go` migrated from a raw `*github.Client` to `gogithub`'s `clientv1.Client` and stable `gogithub.*` types, including a new `ListUserEvents` wrapper for the contribution activity heatmap — internal only, no exported API change",
+          "commit": "3a1db72"
+        }
       ],
       "fixed": [
-        { "description": "Resolve golangci-lint findings in `quarterly_report.go`, `output/devxdashboard/period.go`, and `quarterly/dashboard.go`", "commit": "390f4f9" }
+        {
+          "description": "Resolve golangci-lint findings in `quarterly_report.go`, `output/devxdashboard/period.go`, and `quarterly/dashboard.go`",
+          "commit": "390f4f9"
+        }
       ],
       "tests": [
-        { "description": "Period dashboard export tests: monthly/weekly export, data sources, widget generation", "commit": "972fe8a" },
-        { "description": "`datasource/prism` tests", "commit": "a343b58" }
+        {
+          "description": "Period dashboard export tests: monthly/weekly export, data sources, widget generation",
+          "commit": "972fe8a"
+        },
+        {
+          "description": "`datasource/prism` tests",
+          "commit": "a343b58"
+        }
       ],
       "documentation": [
-        { "description": "Add DoltDB analytics store specification (PRD/TRD/PLAN/ROADMAP) for SQL-based event analytics", "commit": "f215162" },
-        { "description": "Add comprehensive CLAUDE.md for project onboarding: data sources, output formats, metrics, pricing, common tasks, debugging tips", "commit": "9c590a3" }
+        {
+          "description": "Add DoltDB analytics store specification (PRD/TRD/PLAN/ROADMAP) for SQL-based event analytics",
+          "commit": "f215162"
+        },
+        {
+          "description": "Add comprehensive CLAUDE.md for project onboarding: data sources, output formats, metrics, pricing, common tasks, debugging tips",
+          "commit": "9c590a3"
+        }
       ],
       "dependencies": [
-        { "description": "Bump `github.com/grokify/gogithub` from v0.13.0 to v0.14.0", "commit": "a2a42f4" },
-        { "description": "Add embedded pricing support via `github.com/plexusone/omnidevx-core`", "commit": "6f142a0" },
-        { "description": "Routine `go mod` dependency updates", "commit": "843406d" },
-        { "description": "Update `github.com/grokify/gogithub` to v0.16.0, dropping `github.com/google/go-github` to a transitive dependency", "commit": "3a1db72" },
-        { "description": "Routine `go mod` dependency updates", "commit": "8abb58a" }
+        {
+          "description": "Bump `github.com/grokify/gogithub` from v0.13.0 to v0.14.0",
+          "commit": "a2a42f4"
+        },
+        {
+          "description": "Add embedded pricing support via `github.com/plexusone/omnidevx-core`",
+          "commit": "6f142a0"
+        },
+        {
+          "description": "Routine `go mod` dependency updates",
+          "commit": "843406d"
+        },
+        {
+          "description": "Update `github.com/grokify/gogithub` to v0.16.0, dropping `github.com/google/go-github` to a transitive dependency",
+          "commit": "3a1db72"
+        },
+        {
+          "description": "Routine `go mod` dependency updates",
+          "commit": "8abb58a"
+        }
       ]
     },
     {
       "version": "v0.2.0",
       "date": "2026-07-20",
       "highlights": [
-        { "description": "`devfolio devx dashboard`: build a DeveloperPeriodReport from the local OmniDevX event store (Claude Code, Codex CLI, git, GitHub) and export it as a dashforge dashboard", "commit": "13ec741" },
-        { "description": "MkDocs documentation site, matching the rest of the OmniDevX ecosystem", "commit": "a6102a8" },
-        { "description": "Contributor profile: local git clone detection with automatic API fallback, multi-stage progress reporting, and a dashforge dashboard export flag", "commit": "78961b7" }
+        {
+          "description": "`devfolio devx dashboard`: build a DeveloperPeriodReport from the local OmniDevX event store (Claude Code, Codex CLI, git, GitHub) and export it as a dashforge dashboard",
+          "commit": "13ec741"
+        },
+        {
+          "description": "MkDocs documentation site, matching the rest of the OmniDevX ecosystem",
+          "commit": "a6102a8"
+        },
+        {
+          "description": "Contributor profile: local git clone detection with automatic API fallback, multi-stage progress reporting, and a dashforge dashboard export flag",
+          "commit": "78961b7"
+        }
       ],
       "added": [
-        { "description": "`devfolio devx dashboard` command: reads the local OmniDevX store, builds a `DeveloperPeriodReport`, exports a portable dashforge dashboard (8 metric tiles, daily activity/cost charts, source-coverage table)", "commit": "13ec741" },
-        { "description": "`output/devxdashboard` package: projects a `DeveloperPeriodReport` into `dashforge`'s `dashboardir.Dashboard` type directly (not a local reimplementation), so chart widgets render correctly in dashforge's current viewer", "commit": "7aae21c" },
-        { "description": "`contributor profile --dashboard`: export a dashforge-compatible dashboard from a contributor profile (chart widgets use an older shape — see Documentation)", "commit": "5b59e38" },
-        { "description": "`contributor profile --api-only`/`--local-path`: local git clone detection (checks `~/go/src/github.com` and configured paths, falls back to the GitHub API) plus multi-stage progress reporting to stderr", "commit": "78961b7" },
-        { "description": "MkDocs site: landing page, getting-started walkthrough, command reference for contributor/team/devx, PlexusOne nav override — `docs/specs/` (internal ecosystem architecture) deliberately excluded from the built site", "commit": "a6102a8" }
+        {
+          "description": "`devfolio devx dashboard` command: reads the local OmniDevX store, builds a `DeveloperPeriodReport`, exports a portable dashforge dashboard (8 metric tiles, daily activity/cost charts, source-coverage table)",
+          "commit": "13ec741"
+        },
+        {
+          "description": "`output/devxdashboard` package: projects a `DeveloperPeriodReport` into `dashforge`'s `dashboardir.Dashboard` type directly (not a local reimplementation), so chart widgets render correctly in dashforge's current viewer",
+          "commit": "7aae21c"
+        },
+        {
+          "description": "`contributor profile --dashboard`: export a dashforge-compatible dashboard from a contributor profile (chart widgets use an older shape — see Documentation)",
+          "commit": "5b59e38"
+        },
+        {
+          "description": "`contributor profile --api-only`/`--local-path`: local git clone detection (checks `~/go/src/github.com` and configured paths, falls back to the GitHub API) plus multi-stage progress reporting to stderr",
+          "commit": "78961b7"
+        },
+        {
+          "description": "MkDocs site: landing page, getting-started walkthrough, command reference for contributor/team/devx, PlexusOne nav override — `docs/specs/` (internal ecosystem architecture) deliberately excluded from the built site",
+          "commit": "a6102a8"
+        }
       ],
       "changed": [
-        { "description": "README: add the missing docs-mkdoc badge, document `devx dashboard`, fix stale links (dashforge pointed at the wrong org twice, license badge pointed at a nonexistent master branch, visualization badge pointed at an unrelated repo) and a stale Go-version/GITHUB_TOKEN requirements claim", "commit": "f300094" }
+        {
+          "description": "README: add the missing docs-mkdoc badge, document `devx dashboard`, fix stale links (dashforge pointed at the wrong org twice, license badge pointed at a nonexistent master branch, visualization badge pointed at an unrelated repo) and a stale Go-version/GITHUB_TOKEN requirements claim",
+          "commit": "f300094"
+        }
       ],
       "dependencies": [
-        { "description": "Add `github.com/plexusone/dashforge` v0.3.0 for the dashboardir types", "commit": "5738257" },
-        { "description": "Add `github.com/plexusone/omnidevx-core` v0.2.0 for the report/identity/store packages", "commit": "e5e8dd1" },
-        { "description": "Bump `github.com/google/go-github` to v88.0.0, `github.com/grokify/gogithub` to v0.13.0, `github.com/grokify/mogo` to v0.74.6, `github.com/grokify/structured-changelog` to v0.14.1 (routine dependabot updates)", "commit": "23916a2" }
+        {
+          "description": "Add `github.com/plexusone/dashforge` v0.3.0 for the dashboardir types",
+          "commit": "5738257"
+        },
+        {
+          "description": "Add `github.com/plexusone/omnidevx-core` v0.2.0 for the report/identity/store packages",
+          "commit": "e5e8dd1"
+        },
+        {
+          "description": "Bump `github.com/google/go-github` to v88.0.0, `github.com/grokify/gogithub` to v0.13.0, `github.com/grokify/mogo` to v0.74.6, `github.com/grokify/structured-changelog` to v0.14.1 (routine dependabot updates)",
+          "commit": "23916a2"
+        }
       ],
       "documentation": [
-        { "description": "OmniDevX ecosystem spec set (PRD/TRD/PLAN/ROADMAP) distilled from ideation notes into `docs/specs/`, covering the canonical event IR through team unification", "commit": "dda5580" },
-        { "description": "TRD §7: dashboard-projection architecture — the two-artifact export (disclosure-safe data + dashforge dashboard definition), why dashforge over a Grafana/OTel stack, and the VisionStudio consumption boundary", "commit": "40e1b46" }
+        {
+          "description": "OmniDevX ecosystem spec set (PRD/TRD/PLAN/ROADMAP) distilled from ideation notes into `docs/specs/`, covering the canonical event IR through team unification",
+          "commit": "dda5580"
+        },
+        {
+          "description": "TRD §7: dashboard-projection architecture — the two-artifact export (disclosure-safe data + dashforge dashboard definition), why dashforge over a Grafana/OTel stack, and the VisionStudio consumption boundary",
+          "commit": "40e1b46"
+        }
       ],
       "infrastructure": [
-        { "description": "Gitignore `.envrc` and `IDEATION_CHAT*.md` scratch notes", "commit": "55f4f3a" }
+        {
+          "description": "Gitignore `.envrc` and `IDEATION_CHAT*.md` scratch notes",
+          "commit": "55f4f3a"
+        }
       ]
     },
     {
       "version": "v0.1.0",
       "date": "2026-02-28",
       "highlights": [
-        { "description": "Developer portfolio and team velocity metrics CLI" },
-        { "description": "AI collaboration tracking to measure how AI-native developers are" }
+        {
+          "description": "Developer portfolio and team velocity metrics CLI"
+        },
+        {
+          "description": "AI collaboration tracking to measure how AI-native developers are"
+        }
       ],
       "added": [
-        { "description": "CLI with `contributor` and `team` command groups", "commit": "6711408" },
-        { "description": "`contributor profile` command to generate comprehensive contributor profiles from GitHub activity", "commit": "bb0c219" },
-        { "description": "Profile types including commits, PRs, issues, reviews, and repository breakdown", "commit": "ba04549" },
-        { "description": "GitHub API client for fetching user contributions and activity heatmap data", "commit": "75da28a" },
-        { "description": "AI collaboration tracking via `Co-Authored-By` trailer parsing in commit messages", "commit": "ba04549" },
-        { "description": "Known AI tools registry: Claude Code, GitHub Copilot, Gemini CLI, Cursor, Aider", "commit": "ba04549" },
-        { "description": "AI commit statistics including percentage, most-used tool, first AI commit date, and trend", "commit": "ba04549" },
-        { "description": "Activity heatmap data for GitHub-style contribution calendars", "commit": "75da28a" },
-        { "description": "`team velocity` placeholder command for team metrics", "commit": "6711408" }
+        {
+          "description": "CLI with `contributor` and `team` command groups",
+          "commit": "6711408"
+        },
+        {
+          "description": "`contributor profile` command to generate comprehensive contributor profiles from GitHub activity",
+          "commit": "bb0c219"
+        },
+        {
+          "description": "Profile types including commits, PRs, issues, reviews, and repository breakdown",
+          "commit": "ba04549"
+        },
+        {
+          "description": "GitHub API client for fetching user contributions and activity heatmap data",
+          "commit": "75da28a"
+        },
+        {
+          "description": "AI collaboration tracking via `Co-Authored-By` trailer parsing in commit messages",
+          "commit": "ba04549"
+        },
+        {
+          "description": "Known AI tools registry: Claude Code, GitHub Copilot, Gemini CLI, Cursor, Aider",
+          "commit": "ba04549"
+        },
+        {
+          "description": "AI commit statistics including percentage, most-used tool, first AI commit date, and trend",
+          "commit": "ba04549"
+        },
+        {
+          "description": "Activity heatmap data for GitHub-style contribution calendars",
+          "commit": "75da28a"
+        },
+        {
+          "description": "`team velocity` placeholder command for team metrics",
+          "commit": "6711408"
+        }
       ],
       "infrastructure": [
-        { "description": "GitHub Actions workflows for CI, lint, and SAST via reusable workflows", "commit": "a562858" },
-        { "description": "Dependabot configuration for daily gomod and github-actions updates", "commit": "a562858" }
+        {
+          "description": "GitHub Actions workflows for CI, lint, and SAST via reusable workflows",
+          "commit": "a562858"
+        },
+        {
+          "description": "Dependabot configuration for daily gomod and github-actions updates",
+          "commit": "a562858"
+        }
       ],
       "documentation": [
-        { "description": "Project README with usage examples and feature overview", "commit": "25b5cf7" }
+        {
+          "description": "Project README with usage examples and feature overview",
+          "commit": "25b5cf7"
+        }
       ]
     }
   ]
