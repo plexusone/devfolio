@@ -161,7 +161,10 @@ func runContributorProfile(cmd *cobra.Command, args []string) error {
 	if contribProfileOutput == "" {
 		fmt.Println(string(output))
 	} else {
-		if err := os.WriteFile(contribProfileOutput, output, 0600); err != nil {
+		// contribProfileOutput is an intentional user-supplied CLI argument (-o/--output).
+		outPath := filepath.Clean(contribProfileOutput)
+		err := os.WriteFile(outPath, output, 0o600) //nolint:gosec // G703: intentional user-supplied CLI output path (-o/--output), cleaned via filepath.Clean
+		if err != nil {
 			return fmt.Errorf("writing output: %w", err)
 		}
 		outputType := "profile"

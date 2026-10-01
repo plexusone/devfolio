@@ -164,12 +164,12 @@ func writeJSON(report *quarterly.Report, path string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0o600)
 }
 
 func writeHTML(report *quarterly.Report, path string) error {
 	html := generateHTML(report)
-	return os.WriteFile(path, []byte(html), 0644)
+	return os.WriteFile(path, []byte(html), 0o600)
 }
 
 func writeDashboard(report *quarterly.Report, path string) error {
@@ -181,7 +181,7 @@ func writeDashboard(report *quarterly.Report, path string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0o600)
 }
 
 func generateHTML(r *quarterly.Report) string {
@@ -1383,10 +1383,15 @@ func modelSortKey(name string) string {
 	// This makes 4-8 sort before 4-5
 	inverted := make([]byte, len(name))
 	for i, c := range name {
-		if c >= '0' && c <= '9' {
+		switch {
+		case c >= '0' && c <= '9':
 			inverted[i] = byte('9' - (c - '0'))
-		} else {
-			inverted[i] = byte(c)
+		case c <= 0xFF:
+			inverted[i] = byte(c) //nolint:gosec // G115: guarded by c <= 0xFF, conversion cannot overflow
+		default:
+			// Model names are expected to be ASCII; clamp any
+			// non-ASCII rune so it sorts last without overflowing.
+			inverted[i] = 0xFF
 		}
 	}
 	return tier + "-" + string(inverted)
