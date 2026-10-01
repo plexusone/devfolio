@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/plexusone/uiforge/dashboardir"
+	"github.com/plexusone/dashforge/dashboardir"
 )
 
 // ExportDashboard converts a quarterly Report into a uiforge Dashboard IR.

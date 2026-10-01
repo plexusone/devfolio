@@ -17,7 +17,7 @@ import (
 	"strings"
 
 	report "github.com/plexusone/omnidevx-core/report"
-	"github.com/plexusone/uiforge/dashboardir"
+	"github.com/plexusone/dashforge/dashboardir"
 )
 
 // DailyPoint is one day's activity. Callers build this slice themselves via

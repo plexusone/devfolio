@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/plexusone/omnidevx-core/report"
-	"github.com/plexusone/uiforge/dashboardir"
+	"github.com/plexusone/dashforge/dashboardir"
 )
 
 // PeriodType identifies the granularity of a period report.

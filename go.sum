@@ -20,10 +20,10 @@ github.com/huandu/xstrings v1.6.2 h1:+X5X6N46b40cmDw7FFJFU6Eoq0yJS8lbYigT2EFau4c
 github.com/huandu/xstrings v1.6.2/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
+github.com/plexusone/dashforge v0.7.0 h1:8BQB26/chOlHqle/vzPs5HaJUZBWsJoK1Esg7WvSH7Y=
+github.com/plexusone/dashforge v0.7.0/go.mod h1:Tl75pRp6vAJHDXqN3lVwTkZGfeWZYlJEnxSrWDLIvmM=
 github.com/plexusone/omnidevx-core v0.3.0 h1:uKSJAjs74fzod5iM3W3opG53eNX1v4J0WHK4mC2QL/0=
 github.com/plexusone/omnidevx-core v0.3.0/go.mod h1:ryBtws1QCxC6eWAtNddW4doPzVDOz9tBZsoA0gC1w/A=
-github.com/plexusone/uiforge v0.5.0 h1:803pSOcZM7uBEHeWDYJXuc7725t/8J8+unHMeL9erN4=
-github.com/plexusone/uiforge v0.5.0/go.mod h1:of90e2MjHxiMWWqDXdHizwWV2jZh4mCuLTTpbPL+wfI=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/shurcooL/githubv4 v0.0.0-20260209031235-2402fdf4a9ed h1:KT7hI8vYXgU0s2qaMkrfq9tCA1w/iEPgfredVP+4Tzw=
 github.com/shurcooL/githubv4 v0.0.0-20260209031235-2402fdf4a9ed/go.mod h1:zqMwyHmnN/eDOZOdiTohqIUKUrTFX62PNlu7IJdu0q8=

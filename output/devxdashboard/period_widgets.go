@@ -3,7 +3,7 @@ package devxdashboard
 import (
 	"encoding/json"
 
-	"github.com/plexusone/uiforge/dashboardir"
+	"github.com/plexusone/dashforge/dashboardir"
 )
 
 func buildPeriodWidgets(periodType PeriodType) []dashboardir.Widget {
