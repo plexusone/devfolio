@@ -8,7 +8,7 @@ require (
 	github.com/grokify/mogo v0.75.0
 	github.com/grokify/structured-changelog v0.16.0
 	github.com/plexusone/dashforge v0.7.0
-	github.com/plexusone/omnidevx-core v0.3.0
+	github.com/plexusone/omnidevx-core v0.4.1
 	github.com/spf13/cobra v1.10.2
 )
 
