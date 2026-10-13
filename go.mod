@@ -4,7 +4,7 @@ go 1.26.6
 
 require (
 	github.com/grokify/gogit v0.14.0
-	github.com/grokify/gogithub v0.17.0
+	github.com/grokify/gogithub v0.18.0
 	github.com/grokify/mogo v0.75.0
 	github.com/grokify/structured-changelog v0.16.0
 	github.com/plexusone/dashforge v0.7.0
@@ -21,7 +21,7 @@ require (
 	github.com/shurcooL/githubv4 v0.0.0-20260209031235-2402fdf4a9ed // indirect
 	github.com/shurcooL/graphql v0.0.0-20240915155400-7ee5256398cf // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
-	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba // indirect
+	golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92 // indirect
 	golang.org/x/oauth2 v0.37.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 )

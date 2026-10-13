@@ -10,8 +10,8 @@ github.com/google/go-querystring v1.2.0 h1:yhqkPbu2/OH+V9BfpCVPZkNmUXhb2gBxJArfh
 github.com/google/go-querystring v1.2.0/go.mod h1:8IFJqpSRITyJ8QhQ13bmbeMBDfmeEJZD5A0egEOmkqU=
 github.com/grokify/gogit v0.14.0 h1:e0oolOV0C9XZpKZYryE/6kGGXpeOsylHq+jWdTLucc4=
 github.com/grokify/gogit v0.14.0/go.mod h1:Wy9tAbgnMRaVxL6K910kLEz74Q6rn16FAENk5QQrqQs=
-github.com/grokify/gogithub v0.17.0 h1:FJy2QcLaJuypY15xE7vcwfIaISVPBaAScIJKfbcr440=
-github.com/grokify/gogithub v0.17.0/go.mod h1:r3c5J6UKCTv1vigQkulpeZGXfH3+EQ5540GZxGPVgbU=
+github.com/grokify/gogithub v0.18.0 h1:kNmr08nS+56GVR7KbBaBYGR+rppL+NJzUqYdqWVg4Fk=
+github.com/grokify/gogithub v0.18.0/go.mod h1:4WOH8NMIwb46JKN0PjARPB/HtjCyArHw/kWbsMlC3B0=
 github.com/grokify/mogo v0.75.0 h1:YVOGu49NWvltMfG9wh3aarRD6CTF7y0llEFU+HU9drc=
 github.com/grokify/mogo v0.75.0/go.mod h1:FLksmFRywriEucyYLAGyub7C0po49Yc/nHc9q9gX67w=
 github.com/grokify/structured-changelog v0.16.0 h1:sTKO7GuHE2KKUAbCOlUQcpaKG+E6fmI+71NYbVvcn3o=
@@ -35,8 +35,8 @@ github.com/spf13/pflag v1.0.9/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An
 github.com/spf13/pflag v1.0.10 h1:4EBh2KAYBwaONj6b2Ye1GiHfwjqyROoF4RwYO+vPwFk=
 github.com/spf13/pflag v1.0.10/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
 go.yaml.in/yaml/v3 v3.0.4/go.mod h1:DhzuOOF2ATzADvBadXxruRBLzYTpT36CKvDb3+aBEFg=
-golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba h1:Ck8QetSgk912qxWLMCKxd0in+aiyBQyDSMae6e/xmpU=
-golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba/go.mod h1:50RgIsmK7OwqzTTeqcSXQW8SswW0o8fRcDxmqGluJ8E=
+golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92 h1:kc+Gi2MFkd0KWtdDlVxVwjw4KB98/77usJDFj+6YFQ8=
+golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92/go.mod h1:SRjTzy5WcYqRRqquLUvHeeovSwLO0CZ3xcltZNO4Fck=
 golang.org/x/oauth2 v0.37.0 h1:JUlcxA8oAtauLfiH8FX2/FkAWHAdi0QtGCGc+hofE98=
 golang.org/x/oauth2 v0.37.0/go.mod h1:IxwZNxUULJmpBFf9K/9NTMSIfZZuvuTy1gGxhigP/58=
 golang.org/x/text v0.42.0 h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=
