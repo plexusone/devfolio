@@ -6,7 +6,7 @@ require (
 	github.com/grokify/gogit v0.14.0
 	github.com/grokify/gogithub v0.18.0
 	github.com/grokify/mogo v0.75.0
-	github.com/grokify/structured-changelog v0.16.0
+	github.com/grokify/structured-changelog v0.16.1
 	github.com/plexusone/dashforge v0.7.0
 	github.com/plexusone/omnidevx-core v0.4.1
 	github.com/spf13/cobra v1.10.2
